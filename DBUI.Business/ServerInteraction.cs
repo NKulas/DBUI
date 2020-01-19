@@ -16,6 +16,15 @@ namespace DBUI.Business
         public string Username { get; set; }
         public SecureString Password { get; set; }
 
+        public string GetConnectionString()
+        {
+            string connectionString = $"Server={Server}; Database={Database}; ";
+            if (AuthenticationType == SharedResources.eAuthenticationTypes.Windows) connectionString += "Integrated Security = SSPI;";
+            else connectionString += $"User Id={Username}; Password={Password.ToString()};";
+
+            return connectionString;
+        }
+
         public bool TestConnection()
         {
             throw new NotImplementedException();

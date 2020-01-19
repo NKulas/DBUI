@@ -21,29 +21,100 @@ namespace DBUI.Interface
 
         private void ConnectButton_Click(object sender, EventArgs e)
         {
-            ServerInteraction oInteraction = new ServerInteraction
+            List<string> invalidFields = new List<string>();
+            if (string.IsNullOrEmpty(ServerTextbox.Text))
             {
-                Server = ServerTextbox.Text,
-                Database = DatabaseTextbox.Text,
-                Table = TableTextbox.Text
-            };
+                invalidFields.Add("server");
+            }
+            if (string.IsNullOrEmpty(DatabaseTextbox.Text))
+            {
+                invalidFields.Add("database");
+            }
+            if (string.IsNullOrWhiteSpace(TableTextbox.Text))
+            {
+                invalidFields.Add("table");
+            }
 
-            if (AuthenticationCheckbox.Checked)
+            if (!AuthenticationCheckbox.Checked && string.IsNullOrEmpty(UsernameTextbox.Text))
             {
-                oInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Windows;
+                invalidFields.Add("username");
+            }
+            if (!AuthenticationCheckbox.Checked && string.IsNullOrEmpty(PasswordTextbox.Text))
+            {
+                invalidFields.Add("password");
+            }
+
+            if (invalidFields.Count == 0)
+            {
+                ServerInteraction oInteraction = new ServerInteraction
+                {
+                    Server = ServerTextbox.Text,
+                    Database = DatabaseTextbox.Text,
+                    Table = TableTextbox.Text
+                };
+
+                if (AuthenticationCheckbox.Checked)
+                {
+                    oInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Windows;
+                }
+                else
+                {
+                    oInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Server;
+                    oInteraction.Username = UsernameTextbox.Text;
+                    SecureString secure = new SecureString();
+                    foreach (char c in PasswordTextbox.Text)
+                    {
+                        secure.AppendChar(c);
+                    }
+                    oInteraction.Password = secure;
+                }
             }
             else
             {
-                oInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Server;
-                oInteraction.Username = UsernameTextbox.Text;
-                SecureString secure = new SecureString();
-                foreach (char c in PasswordTextbox.Text)
-                {
-                    secure.AppendChar(c);
-                }
-                oInteraction.Password = secure;
-            }
+                string message = "The following fields must have a value:\n";
 
+                int counter = 1;
+                foreach (string field in invalidFields)
+                {
+                    message += field;
+
+                    if (counter < invalidFields.Count)
+                    {
+                        message += ", ";
+                    }
+
+                    counter++;
+                }
+
+                MessageBox.Show(message, "Can't connect", MessageBoxButtons.OK);
+            }
+        }
+
+        private void AuthenticationCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (AuthenticationCheckbox.Checked)
+            {
+                UsernameTextbox.Enabled = false;
+                PasswordTextbox.Enabled = false;
+            }
+            else
+            {
+                UsernameTextbox.Enabled = true;
+                PasswordTextbox.Enabled = true;
+            }
+        }
+
+        private void ConnectClearButton_Click(object sender, EventArgs e)
+        {
+            foreach (Control c in ConnectionPanel.Controls)
+            {
+                if (c is TextBox) (c as TextBox).Text = string.Empty;
+            }
+        }
+
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

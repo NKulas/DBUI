@@ -32,7 +32,6 @@
             this.SearchPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.SearchLabel = new System.Windows.Forms.Label();
             this.ConnectionPanel = new System.Windows.Forms.GroupBox();
-            this.ConnectButton = new DBUI.Business.AppButton();
             this.AuthenticationCheckbox = new System.Windows.Forms.CheckBox();
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UsernameLabel = new System.Windows.Forms.Label();
@@ -45,8 +44,10 @@
             this.DatabaseTextbox = new System.Windows.Forms.TextBox();
             this.ServerTextbox = new System.Windows.Forms.TextBox();
             this.ExitButton = new DBUI.Business.AppButton();
-            this.ClearButton = new DBUI.Business.AppButton();
+            this.SearchClearButton = new DBUI.Business.AppButton();
             this.SearchButton = new DBUI.Business.AppButton();
+            this.ConnectButton = new DBUI.Business.AppButton();
+            this.ConnectClearButton = new DBUI.Business.AppButton();
             this.ConnectionPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -56,7 +57,7 @@
             this.NoahLabel.Location = new System.Drawing.Point(12, 577);
             this.NoahLabel.Name = "NoahLabel";
             this.NoahLabel.Size = new System.Drawing.Size(171, 20);
-            this.NoahLabel.TabIndex = 0;
+            this.NoahLabel.TabIndex = 6;
             this.NoahLabel.Text = "Created by Noah Kulas";
             // 
             // SearchPanel
@@ -66,7 +67,7 @@
             this.SearchPanel.Location = new System.Drawing.Point(426, 66);
             this.SearchPanel.Name = "SearchPanel";
             this.SearchPanel.Size = new System.Drawing.Size(278, 488);
-            this.SearchPanel.TabIndex = 1;
+            this.SearchPanel.TabIndex = 2;
             // 
             // SearchLabel
             // 
@@ -74,11 +75,12 @@
             this.SearchLabel.Location = new System.Drawing.Point(422, 43);
             this.SearchLabel.Name = "SearchLabel";
             this.SearchLabel.Size = new System.Drawing.Size(84, 20);
-            this.SearchLabel.TabIndex = 2;
+            this.SearchLabel.TabIndex = 1;
             this.SearchLabel.Text = "Search by:";
             // 
             // ConnectionPanel
             // 
+            this.ConnectionPanel.Controls.Add(this.ConnectClearButton);
             this.ConnectionPanel.Controls.Add(this.ConnectButton);
             this.ConnectionPanel.Controls.Add(this.AuthenticationCheckbox);
             this.ConnectionPanel.Controls.Add(this.PasswordLabel);
@@ -94,19 +96,9 @@
             this.ConnectionPanel.Location = new System.Drawing.Point(19, 37);
             this.ConnectionPanel.Name = "ConnectionPanel";
             this.ConnectionPanel.Size = new System.Drawing.Size(365, 517);
-            this.ConnectionPanel.TabIndex = 3;
+            this.ConnectionPanel.TabIndex = 0;
             this.ConnectionPanel.TabStop = false;
             this.ConnectionPanel.Text = "Connect";
-            // 
-            // ConnectButton
-            // 
-            this.ConnectButton.Location = new System.Drawing.Point(113, 435);
-            this.ConnectButton.Name = "ConnectButton";
-            this.ConnectButton.Size = new System.Drawing.Size(114, 49);
-            this.ConnectButton.TabIndex = 11;
-            this.ConnectButton.Text = "Connect";
-            this.ConnectButton.UseVisualStyleBackColor = true;
-            this.ConnectButton.Click += new System.EventHandler(this.ConnectButton_Click);
             // 
             // AuthenticationCheckbox
             // 
@@ -116,9 +108,10 @@
             this.AuthenticationCheckbox.Location = new System.Drawing.Point(10, 255);
             this.AuthenticationCheckbox.Name = "AuthenticationCheckbox";
             this.AuthenticationCheckbox.Size = new System.Drawing.Size(199, 24);
-            this.AuthenticationCheckbox.TabIndex = 10;
+            this.AuthenticationCheckbox.TabIndex = 6;
             this.AuthenticationCheckbox.Text = "Windows Authentication";
             this.AuthenticationCheckbox.UseVisualStyleBackColor = true;
+            this.AuthenticationCheckbox.CheckedChanged += new System.EventHandler(this.AuthenticationCheckbox_CheckedChanged);
             // 
             // PasswordLabel
             // 
@@ -126,7 +119,7 @@
             this.PasswordLabel.Location = new System.Drawing.Point(6, 367);
             this.PasswordLabel.Name = "PasswordLabel";
             this.PasswordLabel.Size = new System.Drawing.Size(82, 20);
-            this.PasswordLabel.TabIndex = 9;
+            this.PasswordLabel.TabIndex = 10;
             this.PasswordLabel.Text = "Password:";
             // 
             // UsernameLabel
@@ -140,18 +133,20 @@
             // 
             // PasswordTextbox
             // 
+            this.PasswordTextbox.Enabled = false;
             this.PasswordTextbox.Location = new System.Drawing.Point(152, 361);
             this.PasswordTextbox.Name = "PasswordTextbox";
             this.PasswordTextbox.Size = new System.Drawing.Size(192, 26);
-            this.PasswordTextbox.TabIndex = 7;
+            this.PasswordTextbox.TabIndex = 9;
             this.PasswordTextbox.UseSystemPasswordChar = true;
             // 
             // UsernameTextbox
             // 
+            this.UsernameTextbox.Enabled = false;
             this.UsernameTextbox.Location = new System.Drawing.Point(152, 304);
             this.UsernameTextbox.Name = "UsernameTextbox";
             this.UsernameTextbox.Size = new System.Drawing.Size(192, 26);
-            this.UsernameTextbox.TabIndex = 6;
+            this.UsernameTextbox.TabIndex = 7;
             // 
             // TableLabel
             // 
@@ -168,7 +163,7 @@
             this.DatabaseLabel.Location = new System.Drawing.Point(6, 122);
             this.DatabaseLabel.Name = "DatabaseLabel";
             this.DatabaseLabel.Size = new System.Drawing.Size(83, 20);
-            this.DatabaseLabel.TabIndex = 4;
+            this.DatabaseLabel.TabIndex = 3;
             this.DatabaseLabel.Text = "Database:";
             // 
             // ServerLabel
@@ -177,7 +172,7 @@
             this.ServerLabel.Location = new System.Drawing.Point(6, 68);
             this.ServerLabel.Name = "ServerLabel";
             this.ServerLabel.Size = new System.Drawing.Size(59, 20);
-            this.ServerLabel.TabIndex = 3;
+            this.ServerLabel.TabIndex = 1;
             this.ServerLabel.Text = "Server:";
             // 
             // TableTextbox
@@ -185,14 +180,14 @@
             this.TableTextbox.Location = new System.Drawing.Point(152, 173);
             this.TableTextbox.Name = "TableTextbox";
             this.TableTextbox.Size = new System.Drawing.Size(192, 26);
-            this.TableTextbox.TabIndex = 2;
+            this.TableTextbox.TabIndex = 4;
             // 
             // DatabaseTextbox
             // 
             this.DatabaseTextbox.Location = new System.Drawing.Point(152, 122);
             this.DatabaseTextbox.Name = "DatabaseTextbox";
             this.DatabaseTextbox.Size = new System.Drawing.Size(192, 26);
-            this.DatabaseTextbox.TabIndex = 1;
+            this.DatabaseTextbox.TabIndex = 2;
             // 
             // ServerTextbox
             // 
@@ -206,34 +201,55 @@
             this.ExitButton.Location = new System.Drawing.Point(734, 318);
             this.ExitButton.Name = "ExitButton";
             this.ExitButton.Size = new System.Drawing.Size(114, 49);
-            this.ExitButton.TabIndex = 14;
+            this.ExitButton.TabIndex = 5;
             this.ExitButton.Text = "Exit";
             this.ExitButton.UseVisualStyleBackColor = true;
+            this.ExitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
-            // ClearButton
+            // SearchClearButton
             // 
-            this.ClearButton.Location = new System.Drawing.Point(734, 239);
-            this.ClearButton.Name = "ClearButton";
-            this.ClearButton.Size = new System.Drawing.Size(114, 49);
-            this.ClearButton.TabIndex = 13;
-            this.ClearButton.Text = "Clear";
-            this.ClearButton.UseVisualStyleBackColor = true;
+            this.SearchClearButton.Location = new System.Drawing.Point(734, 239);
+            this.SearchClearButton.Name = "SearchClearButton";
+            this.SearchClearButton.Size = new System.Drawing.Size(114, 49);
+            this.SearchClearButton.TabIndex = 4;
+            this.SearchClearButton.Text = "Clear";
+            this.SearchClearButton.UseVisualStyleBackColor = true;
             // 
             // SearchButton
             // 
             this.SearchButton.Location = new System.Drawing.Point(734, 159);
             this.SearchButton.Name = "SearchButton";
             this.SearchButton.Size = new System.Drawing.Size(114, 49);
-            this.SearchButton.TabIndex = 12;
+            this.SearchButton.TabIndex = 3;
             this.SearchButton.Text = "Search";
             this.SearchButton.UseVisualStyleBackColor = true;
+            // 
+            // ConnectButton
+            // 
+            this.ConnectButton.Location = new System.Drawing.Point(35, 435);
+            this.ConnectButton.Name = "ConnectButton";
+            this.ConnectButton.Size = new System.Drawing.Size(114, 49);
+            this.ConnectButton.TabIndex = 11;
+            this.ConnectButton.Text = "Connect";
+            this.ConnectButton.UseVisualStyleBackColor = true;
+            this.ConnectButton.Click += new System.EventHandler(this.ConnectButton_Click);
+            // 
+            // ConnectClearButton
+            // 
+            this.ConnectClearButton.Location = new System.Drawing.Point(194, 435);
+            this.ConnectClearButton.Name = "ConnectClearButton";
+            this.ConnectClearButton.Size = new System.Drawing.Size(114, 49);
+            this.ConnectClearButton.TabIndex = 12;
+            this.ConnectClearButton.Text = "Clear";
+            this.ConnectClearButton.UseVisualStyleBackColor = true;
+            this.ConnectClearButton.Click += new System.EventHandler(this.ConnectClearButton_Click);
             // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(872, 606);
             this.Controls.Add(this.ExitButton);
-            this.Controls.Add(this.ClearButton);
+            this.Controls.Add(this.SearchClearButton);
             this.Controls.Add(this.SearchButton);
             this.Controls.Add(this.ConnectionPanel);
             this.Controls.Add(this.SearchLabel);
@@ -241,6 +257,7 @@
             this.Controls.Add(this.NoahLabel);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.Name = "MainForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Data Base User Interface";
             this.ConnectionPanel.ResumeLayout(false);
             this.ConnectionPanel.PerformLayout();
@@ -268,8 +285,9 @@
         private System.Windows.Forms.CheckBox AuthenticationCheckbox;
         private Business.AppButton ConnectButton;
         private Business.AppButton SearchButton;
-        private Business.AppButton ClearButton;
+        private Business.AppButton SearchClearButton;
         private Business.AppButton ExitButton;
+        private Business.AppButton ConnectClearButton;
     }
 }
 
