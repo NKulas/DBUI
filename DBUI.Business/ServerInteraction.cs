@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace DBUI.Business
 {
-    public class ServerInteraction
+    public static class ServerInteraction
     {
-        public string Server { get; set; }
-        public string Database { get; set; }
-        public string Table { get; set; }
-        public SharedResources.eAuthenticationTypes AuthenticationType { get; set; }
-        public string Username { get; set; }
-        public SecureString Password { get; set; }
+        public static string Server { get; set; }
+        public static string Database { get; set; }
+        public static string Table { get; set; }
+        public static SharedResources.eAuthenticationTypes AuthenticationType { get; set; }
+        public static string Username { get; set; }
+        public static SecureString Password { get; set; }
 
-        public string GetConnectionString()
+        public static string GetConnectionString()
         {
             string connectionString = $"Server={Server}; Database={Database}; ";
             if (AuthenticationType == SharedResources.eAuthenticationTypes.Windows) connectionString += "Integrated Security = SSPI;";
@@ -25,7 +25,7 @@ namespace DBUI.Business
             return connectionString;
         }
 
-        public bool TestConnection()
+        public static bool TestConnection()
         {
             throw new NotImplementedException();
         }

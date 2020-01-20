@@ -54,7 +54,7 @@ namespace DBUI.Data
             }
         }
 
-        public static DataSet Query(string sql, SqlParameter[] parameters = null)
+        public static DataTable Query(string sql, SqlParameter[] parameters = null)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace DBUI.Data
 
                 if (parameters != null) command.Parameters.AddRange(parameters);
 
-                DataSet data = new DataSet();
+                DataTable data = new DataTable();
                 SqlDataAdapter adapter = new SqlDataAdapter();
                 adapter.SelectCommand = command;
                 adapter.Fill(data);

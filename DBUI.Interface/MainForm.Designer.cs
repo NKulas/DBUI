@@ -32,6 +32,8 @@
             this.SearchPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.SearchLabel = new System.Windows.Forms.Label();
             this.ConnectionPanel = new System.Windows.Forms.GroupBox();
+            this.ConnectClearButton = new DBUI.Business.AppButton();
+            this.ConnectButton = new DBUI.Business.AppButton();
             this.AuthenticationCheckbox = new System.Windows.Forms.CheckBox();
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UsernameLabel = new System.Windows.Forms.Label();
@@ -46,8 +48,6 @@
             this.ExitButton = new DBUI.Business.AppButton();
             this.SearchClearButton = new DBUI.Business.AppButton();
             this.SearchButton = new DBUI.Business.AppButton();
-            this.ConnectButton = new DBUI.Business.AppButton();
-            this.ConnectClearButton = new DBUI.Business.AppButton();
             this.ConnectionPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -99,6 +99,26 @@
             this.ConnectionPanel.TabIndex = 0;
             this.ConnectionPanel.TabStop = false;
             this.ConnectionPanel.Text = "Connect";
+            // 
+            // ConnectClearButton
+            // 
+            this.ConnectClearButton.Location = new System.Drawing.Point(194, 435);
+            this.ConnectClearButton.Name = "ConnectClearButton";
+            this.ConnectClearButton.Size = new System.Drawing.Size(114, 49);
+            this.ConnectClearButton.TabIndex = 12;
+            this.ConnectClearButton.Text = "Clear";
+            this.ConnectClearButton.UseVisualStyleBackColor = true;
+            this.ConnectClearButton.Click += new System.EventHandler(this.ConnectClearButton_Click);
+            // 
+            // ConnectButton
+            // 
+            this.ConnectButton.Location = new System.Drawing.Point(35, 435);
+            this.ConnectButton.Name = "ConnectButton";
+            this.ConnectButton.Size = new System.Drawing.Size(114, 49);
+            this.ConnectButton.TabIndex = 11;
+            this.ConnectButton.Text = "Connect";
+            this.ConnectButton.UseVisualStyleBackColor = true;
+            this.ConnectButton.Click += new System.EventHandler(this.ConnectButton_Click);
             // 
             // AuthenticationCheckbox
             // 
@@ -214,6 +234,7 @@
             this.SearchClearButton.TabIndex = 4;
             this.SearchClearButton.Text = "Clear";
             this.SearchClearButton.UseVisualStyleBackColor = true;
+            this.SearchClearButton.Click += new System.EventHandler(this.SearchClearButton_Click);
             // 
             // SearchButton
             // 
@@ -223,26 +244,7 @@
             this.SearchButton.TabIndex = 3;
             this.SearchButton.Text = "Search";
             this.SearchButton.UseVisualStyleBackColor = true;
-            // 
-            // ConnectButton
-            // 
-            this.ConnectButton.Location = new System.Drawing.Point(35, 435);
-            this.ConnectButton.Name = "ConnectButton";
-            this.ConnectButton.Size = new System.Drawing.Size(114, 49);
-            this.ConnectButton.TabIndex = 11;
-            this.ConnectButton.Text = "Connect";
-            this.ConnectButton.UseVisualStyleBackColor = true;
-            this.ConnectButton.Click += new System.EventHandler(this.ConnectButton_Click);
-            // 
-            // ConnectClearButton
-            // 
-            this.ConnectClearButton.Location = new System.Drawing.Point(194, 435);
-            this.ConnectClearButton.Name = "ConnectClearButton";
-            this.ConnectClearButton.Size = new System.Drawing.Size(114, 49);
-            this.ConnectClearButton.TabIndex = 12;
-            this.ConnectClearButton.Text = "Clear";
-            this.ConnectClearButton.UseVisualStyleBackColor = true;
-            this.ConnectClearButton.Click += new System.EventHandler(this.ConnectClearButton_Click);
+            this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
             // MainForm
             // 

@@ -46,9 +46,22 @@
     <Compile Include="AppButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Entity.cs" />
+    <Compile Include="EntityCollection.cs" />
+    <Compile Include="Property.cs" />
+    <Compile Include="ReferenceEntity.cs" />
+    <Compile Include="ReferenceProperty.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ServerInteraction.cs" />
     <Compile Include="SharedResources.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DBUI.Data\DBUI.Data.csproj">
+      <Project>{b86c1531-2753-44f6-9d11-520822f11f91}</Project>
+      <Name>DBUI.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

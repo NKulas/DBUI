@@ -17,6 +17,8 @@ namespace DBUI.Interface
         public MainForm()
         {
             InitializeComponent();
+            SearchPanel.Controls.Add(new ReferenceProperty("Building", "Building", "Building"));
+            SearchPanel.Controls.Add(new ReferenceProperty("Unit", "UnitNum", "UnitNum"));
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -46,27 +48,24 @@ namespace DBUI.Interface
 
             if (invalidFields.Count == 0)
             {
-                ServerInteraction oInteraction = new ServerInteraction
-                {
-                    Server = ServerTextbox.Text,
-                    Database = DatabaseTextbox.Text,
-                    Table = TableTextbox.Text
-                };
+                ServerInteraction.Server = ServerTextbox.Text;
+                ServerInteraction.Database = DatabaseTextbox.Text;
+                ServerInteraction.Table = TableTextbox.Text;
 
                 if (AuthenticationCheckbox.Checked)
                 {
-                    oInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Windows;
+                    ServerInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Windows;
                 }
                 else
                 {
-                    oInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Server;
-                    oInteraction.Username = UsernameTextbox.Text;
+                    ServerInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Server;
+                    ServerInteraction.Username = UsernameTextbox.Text;
                     SecureString secure = new SecureString();
                     foreach (char c in PasswordTextbox.Text)
                     {
                         secure.AppendChar(c);
                     }
-                    oInteraction.Password = secure;
+                    ServerInteraction.Password = secure;
                 }
             }
             else
@@ -110,6 +109,16 @@ namespace DBUI.Interface
             {
                 if (c is TextBox) (c as TextBox).Text = string.Empty;
             }
+        }
+
+        private void SearchButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SearchClearButton_Click(object sender, EventArgs e)
+        {
+            //foreach (ReferenceProperty rp in ReferencePropertyCollection) {}
         }
 
         private void ExitButton_Click(object sender, EventArgs e)
