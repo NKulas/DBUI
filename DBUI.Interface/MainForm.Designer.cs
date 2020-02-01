@@ -32,8 +32,6 @@
             this.SearchPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.SearchLabel = new System.Windows.Forms.Label();
             this.ConnectionPanel = new System.Windows.Forms.GroupBox();
-            this.ConnectClearButton = new DBUI.Business.AppButton();
-            this.ConnectButton = new DBUI.Business.AppButton();
             this.AuthenticationCheckbox = new System.Windows.Forms.CheckBox();
             this.PasswordLabel = new System.Windows.Forms.Label();
             this.UsernameLabel = new System.Windows.Forms.Label();
@@ -48,6 +46,9 @@
             this.ExitButton = new DBUI.Business.AppButton();
             this.SearchClearButton = new DBUI.Business.AppButton();
             this.SearchButton = new DBUI.Business.AppButton();
+            this.ConnectClearButton = new DBUI.Business.AppButton();
+            this.ConnectButton = new DBUI.Business.AppButton();
+            this.VersionLabel = new System.Windows.Forms.Label();
             this.ConnectionPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -62,6 +63,7 @@
             // 
             // SearchPanel
             // 
+            this.SearchPanel.AutoScroll = true;
             this.SearchPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.SearchPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.SearchPanel.Location = new System.Drawing.Point(426, 66);
@@ -99,26 +101,6 @@
             this.ConnectionPanel.TabIndex = 0;
             this.ConnectionPanel.TabStop = false;
             this.ConnectionPanel.Text = "Connect";
-            // 
-            // ConnectClearButton
-            // 
-            this.ConnectClearButton.Location = new System.Drawing.Point(194, 435);
-            this.ConnectClearButton.Name = "ConnectClearButton";
-            this.ConnectClearButton.Size = new System.Drawing.Size(114, 49);
-            this.ConnectClearButton.TabIndex = 12;
-            this.ConnectClearButton.Text = "Clear";
-            this.ConnectClearButton.UseVisualStyleBackColor = true;
-            this.ConnectClearButton.Click += new System.EventHandler(this.ConnectClearButton_Click);
-            // 
-            // ConnectButton
-            // 
-            this.ConnectButton.Location = new System.Drawing.Point(35, 435);
-            this.ConnectButton.Name = "ConnectButton";
-            this.ConnectButton.Size = new System.Drawing.Size(114, 49);
-            this.ConnectButton.TabIndex = 11;
-            this.ConnectButton.Text = "Connect";
-            this.ConnectButton.UseVisualStyleBackColor = true;
-            this.ConnectButton.Click += new System.EventHandler(this.ConnectButton_Click);
             // 
             // AuthenticationCheckbox
             // 
@@ -246,10 +228,40 @@
             this.SearchButton.UseVisualStyleBackColor = true;
             this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
+            // ConnectClearButton
+            // 
+            this.ConnectClearButton.Location = new System.Drawing.Point(194, 435);
+            this.ConnectClearButton.Name = "ConnectClearButton";
+            this.ConnectClearButton.Size = new System.Drawing.Size(114, 49);
+            this.ConnectClearButton.TabIndex = 12;
+            this.ConnectClearButton.Text = "Clear";
+            this.ConnectClearButton.UseVisualStyleBackColor = true;
+            this.ConnectClearButton.Click += new System.EventHandler(this.ConnectClearButton_Click);
+            // 
+            // ConnectButton
+            // 
+            this.ConnectButton.Location = new System.Drawing.Point(35, 435);
+            this.ConnectButton.Name = "ConnectButton";
+            this.ConnectButton.Size = new System.Drawing.Size(114, 49);
+            this.ConnectButton.TabIndex = 11;
+            this.ConnectButton.Text = "Connect";
+            this.ConnectButton.UseVisualStyleBackColor = true;
+            this.ConnectButton.Click += new System.EventHandler(this.ConnectButton_Click);
+            // 
+            // VersionLabel
+            // 
+            this.VersionLabel.AutoSize = true;
+            this.VersionLabel.Location = new System.Drawing.Point(758, 577);
+            this.VersionLabel.Name = "VersionLabel";
+            this.VersionLabel.Size = new System.Drawing.Size(102, 20);
+            this.VersionLabel.TabIndex = 7;
+            this.VersionLabel.Text = "Version 0.1.0";
+            // 
             // MainForm
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(872, 606);
+            this.Controls.Add(this.VersionLabel);
             this.Controls.Add(this.ExitButton);
             this.Controls.Add(this.SearchClearButton);
             this.Controls.Add(this.SearchButton);
@@ -290,6 +302,7 @@
         private Business.AppButton SearchClearButton;
         private Business.AppButton ExitButton;
         private Business.AppButton ConnectClearButton;
+        private System.Windows.Forms.Label VersionLabel;
     }
 }
 

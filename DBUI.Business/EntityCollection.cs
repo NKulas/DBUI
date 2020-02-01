@@ -12,6 +12,7 @@ namespace DBUI.Business
     public class EntityCollection : List<Entity>
     {
         public List<SqlParameter> Parameters { get; } = new List<SqlParameter>();
+        public DataTable dataResult { get; private set; } //In use for testing
 
         public EntityCollection()
         {
@@ -31,6 +32,8 @@ namespace DBUI.Business
                     {
                         Add(new Entity(d));
                     }
+                    //This line is for testing
+                    dataResult = result;
                     return true;
                 }
                 else

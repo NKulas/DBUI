@@ -1,15 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DBUI.Data;
 
 namespace DBUI.Business
 {
     public class ReferenceEntity
     {
         public List<ReferenceProperty> ReferenceProperties { get; } = new List<ReferenceProperty>();
+
+        public void LoadReferenceProperties()
+        {
+            DataAccess.ConnectionString = ServerInteraction.GetConnectionString();
+            DataTable columns = DataAccess.Query($"SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{ServerInteraction.Table}';");
+            foreach (DataRow column in columns.Rows)
+            {
+                ReferenceProperties.Add(new ReferenceProperty(column.ItemArray[0].ToString(), column.ItemArray[0].ToString(), column.ItemArray[0].ToString()));
+            }
+        }
 
         public List<SqlParameter> GetSqlParameters()
         {

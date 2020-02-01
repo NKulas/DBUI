@@ -14,20 +14,21 @@ namespace DBUI.Business
 
         public Entity(DataRow d)
         {
+            loadProperties();
             foreach (Property p in Properties)
             {
-                loadProperties();
                 p.Value = d[p.ColumnName].ToString();
             }
         }
 
         private void loadProperties()
         {
-            /*DataSet columns = DataAccess.Query(#Sql to get columns)
-            foreach (DataRow d in columns)
+            Properties = new List<Property>();
+            DataTable columns = DataAccess.Query($"SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{ServerInteraction.Table}';");
+            foreach (DataRow d in columns.Rows)
             {
-                foreach (
-            }*/
+                Properties.Add(new Property(d.ItemArray[0].ToString(), d.ItemArray[0].ToString()));  
+            }
         }
     }
 }

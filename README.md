@@ -1,6 +1,18 @@
 # DBUI
 Database user interface
 
-This project is meant to make it easy to search and view data in a database. This started as a personal project to design a better application for viewing the inventory database at my workplace. I am now completely redesigning it to work with any database.
+<h2>Description</h2>
+This project is meant to make it easy to search and view data in a database.
 
-Note: It is not yet functional. I am hoping to have the first working version ready in the next few weeks.
+<h2>How to use</h2>
+<ol>
+<li>Download the project and launch the executable located in DBUI.Interface -> bin -> Debug -> DBUI.Interface.exe</li>
+<li>In the left panel, enter the information for server, database, table, and authentication</li>
+<li>Click the connect button</li>
+<li>If the connection is successful, the table columns will appear in the right panel</li>
+<li>Check which columns you want to search by and enter the value to search for</li>
+<li>Click search</li>
+</ol>
+
+<h2>Warning</h2>
+The application is still quite unstable. Make sure that all the information you enter in the connection panel is correct, as it may crash if it can't make the connection.

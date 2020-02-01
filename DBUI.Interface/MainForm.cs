@@ -14,11 +14,11 @@ namespace DBUI.Interface
 {
     public partial class MainForm : Form
     {
+        private ReferenceEntity re;
         public MainForm()
         {
             InitializeComponent();
-            SearchPanel.Controls.Add(new ReferenceProperty("Building", "Building", "Building"));
-            SearchPanel.Controls.Add(new ReferenceProperty("Unit", "UnitNum", "UnitNum"));
+            re = new ReferenceEntity();
         }
 
         private void ConnectButton_Click(object sender, EventArgs e)
@@ -67,6 +67,9 @@ namespace DBUI.Interface
                     }
                     ServerInteraction.Password = secure;
                 }
+
+                re.LoadReferenceProperties();
+                SearchPanel.Controls.AddRange(re.ReferenceProperties.ToArray());
             }
             else
             {
@@ -113,12 +116,25 @@ namespace DBUI.Interface
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
-
+            EntityCollection entities = new EntityCollection();
+            string command;
+            if (re.GetSqlCommandString(out command))
+            {
+                entities.DoSearchQuery(command, re.GetSqlParameters());
+                TableForm t = new TableForm(entities.dataResult);
+                t.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("An error occurred", "Error", MessageBoxButtons.OK);
+            }
         }
 
         private void SearchClearButton_Click(object sender, EventArgs e)
         {
-            //foreach (ReferenceProperty rp in ReferencePropertyCollection) {}
+            foreach (ReferenceProperty rp in SearchPanel.Controls) {
+                rp.Clear();
+            }
         }
 
         private void ExitButton_Click(object sender, EventArgs e)
