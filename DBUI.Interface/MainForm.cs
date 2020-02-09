@@ -1,4 +1,5 @@
 ﻿using DBUI.Business;
+using DBUI.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,89 +15,21 @@ namespace DBUI.Interface
 {
     public partial class MainForm : Form
     {
-        private ReferenceEntity re;
+        private ConnectionProfile connection;
+        private Entity referenceEntity;
+
         public MainForm()
         {
             InitializeComponent();
-            re = new ReferenceEntity();
-        }
-
-        private void ConnectButton_Click(object sender, EventArgs e)
-        {
-            List<string> invalidFields = new List<string>();
-            if (string.IsNullOrEmpty(ServerTextbox.Text))
-            {
-                invalidFields.Add("server");
-            }
-            if (string.IsNullOrEmpty(DatabaseTextbox.Text))
-            {
-                invalidFields.Add("database");
-            }
-            if (string.IsNullOrWhiteSpace(TableTextbox.Text))
-            {
-                invalidFields.Add("table");
-            }
-
-            if (!AuthenticationCheckbox.Checked && string.IsNullOrEmpty(UsernameTextbox.Text))
-            {
-                invalidFields.Add("username");
-            }
-            if (!AuthenticationCheckbox.Checked && string.IsNullOrEmpty(PasswordTextbox.Text))
-            {
-                invalidFields.Add("password");
-            }
-
-            if (invalidFields.Count == 0)
-            {
-                ServerInteraction.Server = ServerTextbox.Text;
-                ServerInteraction.Database = DatabaseTextbox.Text;
-                ServerInteraction.Table = TableTextbox.Text;
-
-                if (AuthenticationCheckbox.Checked)
-                {
-                    ServerInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Windows;
-                }
-                else
-                {
-                    ServerInteraction.AuthenticationType = SharedResources.eAuthenticationTypes.Server;
-                    ServerInteraction.Username = UsernameTextbox.Text;
-                    SecureString secure = new SecureString();
-                    foreach (char c in PasswordTextbox.Text)
-                    {
-                        secure.AppendChar(c);
-                    }
-                    ServerInteraction.Password = secure;
-                }
-
-                re.LoadReferenceProperties();
-                SearchPanel.Controls.AddRange(re.ReferenceProperties.ToArray());
-            }
-            else
-            {
-                string message = "The following fields must have a value:\n";
-
-                int counter = 1;
-                foreach (string field in invalidFields)
-                {
-                    message += field;
-
-                    if (counter < invalidFields.Count)
-                    {
-                        message += ", ";
-                    }
-
-                    counter++;
-                }
-
-                MessageBox.Show(message, "Can't connect", MessageBoxButtons.OK);
-            }
         }
 
         private void AuthenticationCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             if (AuthenticationCheckbox.Checked)
             {
+                UsernameTextbox.Text = string.Empty;
                 UsernameTextbox.Enabled = false;
+                PasswordTextbox.Text = string.Empty;
                 PasswordTextbox.Enabled = false;
             }
             else
@@ -106,33 +39,138 @@ namespace DBUI.Interface
             }
         }
 
-        private void ConnectClearButton_Click(object sender, EventArgs e)
+        private void ConnectButton_Click(object sender, EventArgs e)
         {
-            foreach (Control c in ConnectionPanel.Controls)
+            connection = new ConnectionProfile();
+            bool validInput = true;
+            List<string> errors = new List<string>();
+
+            if (ServerTextbox.Text != string.Empty) connection.Server = ServerTextbox.Text;
+            else
             {
-                if (c is TextBox) (c as TextBox).Text = string.Empty;
+                validInput = false;
+                errors.Add("server");
             }
+
+            if (DatabaseTextbox.Text != string.Empty) connection.Database = DatabaseTextbox.Text;
+            else
+            {
+                validInput = false;
+                errors.Add("database");
+            }
+
+            if (TableTextbox.Text != string.Empty) connection.Table = TableTextbox.Text;
+            else
+            {
+                validInput = false;
+                errors.Add("table");
+            }
+
+            if (AuthenticationCheckbox.Checked) connection.AuthenticationType = "Windows";
+            else
+            {
+                connection.AuthenticationType = "Server";
+
+                if (UsernameTextbox.Text != string.Empty) connection.Username = UsernameTextbox.Text;
+                else
+                {
+                    validInput = false;
+                    errors.Add("username");
+                }
+
+                if (PasswordTextbox.Text != string.Empty)
+                {
+                    connection.Password = new SecureString();
+                    foreach (char c in PasswordTextbox.Text.ToCharArray())
+                    {
+                        connection.Password.AppendChar(c);
+                    }
+                }
+                else
+                {
+                    validInput = false;
+                    errors.Add("password");
+                }
+            }
+
+            if (validInput)
+            {
+                DbuiManager.Profile = connection;
+                if (DbuiManager.TestConnection())
+                {
+                    referenceEntity = new Entity();
+                    referenceEntity.Properties = DbuiManager.GetProperties();
+
+                    SearchPanel.Controls.Clear();
+                    foreach (Property p in referenceEntity.Properties)
+                    {
+                        SearchPanel.Controls.Add(new ReferencePropertyPanel(p));
+                    }
+                }
+                else MessageBox.Show("Can't establish connection", "Alert", MessageBoxButtons.OK);
+            }
+            else
+            {
+                string errorString = "The following fields can't be empty: ";
+                bool firstError = true;
+                foreach (string s in errors)
+                {
+                    if (firstError)
+                    {
+                        errorString += $"{s}";
+                        firstError = false;
+                    }
+                    else
+                    {
+                        errorString += $", {s}";
+                    }
+                }
+
+                MessageBox.Show(errorString, "Error", MessageBoxButtons.OK);
+            }
+        }
+
+        private void ClearConnectionButton_Click(object sender, EventArgs e)
+        {
+            ServerTextbox.Text = string.Empty;
+            DatabaseTextbox.Text = string.Empty;
+            TableTextbox.Text = string.Empty;
+
+            AuthenticationCheckbox.Checked = true;
+            UsernameTextbox.Text = string.Empty;
+            PasswordTextbox.Text = string.Empty;
         }
 
         private void SearchButton_Click(object sender, EventArgs e)
         {
-            EntityCollection entities = new EntityCollection();
-            string command;
-            if (re.GetSqlCommandString(out command))
+            int index = 0;
+            Entity searchEntity = new Entity();
+            searchEntity.Properties = referenceEntity.Properties;
+            foreach (ReferencePropertyPanel rp in SearchPanel.Controls)
             {
-                entities.DoSearchQuery(command, re.GetSqlParameters());
-                TableForm t = new TableForm(entities.dataResult);
-                t.ShowDialog();
+                if (rp.IsSelected)
+                {
+                    referenceEntity.Properties[index].Value = rp.Text;
+                }
+                index++;
+            }
+
+            if (DbuiManager.Search(referenceEntity))
+            {
+                //Data table is pulled out of manager for testing only! An entity object will be returned later on.
+                TableForm oForm = new TableForm(DbuiManager.result);
+                oForm.ShowDialog();
             }
             else
             {
-                MessageBox.Show("An error occurred", "Error", MessageBoxButtons.OK);
+                MessageBox.Show("You did not enter any search terms", "Alert", MessageBoxButtons.OK);
             }
         }
 
-        private void SearchClearButton_Click(object sender, EventArgs e)
+        private void ClearSearchButton_Click(object sender, EventArgs e)
         {
-            foreach (ReferenceProperty rp in SearchPanel.Controls) {
+            foreach (ReferencePropertyPanel rp in SearchPanel.Controls)
+            {
                 rp.Clear();
             }
         }
@@ -140,6 +178,6 @@ namespace DBUI.Interface
         private void ExitButton_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
+        } 
     }
 }

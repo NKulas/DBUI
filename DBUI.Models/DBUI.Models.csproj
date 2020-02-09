@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DB9B3D25-144C-4D3F-B358-C9320FF3794A}</ProjectGuid>
+    <ProjectGuid>{17F6B2D5-6CF5-4F4B-B5C2-27481A6BC956}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DBUI.Business</RootNamespace>
-    <AssemblyName>DBUI.Business</AssemblyName>
+    <RootNamespace>DBUI.Models</RootNamespace>
+    <AssemblyName>DBUI.Models</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,19 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbuiManager.cs" />
-    <Compile Include="CommonResources.cs" />
+    <Compile Include="ConnectionProfile.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DBUI.Data\DBUI.Data.csproj">
-      <Project>{b86c1531-2753-44f6-9d11-520822f11f91}</Project>
-      <Name>DBUI.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DBUI.Models\DBUI.Models.csproj">
-      <Project>{17f6b2d5-6cf5-4f4b-b5c2-27481a6bc956}</Project>
-      <Name>DBUI.Models</Name>
-    </ProjectReference>
+    <Compile Include="Property.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2,7 +2,7 @@
 Database user interface
 
 <h2>Description</h2>
-This project is meant to make it easy to search and view data in a database.
+This project makes it easy to search and view data in a database.
 
 <h2>How to use</h2>
 <ol>
@@ -13,6 +13,3 @@ This project is meant to make it easy to search and view data in a database.
 <li>Check which columns you want to search by and enter the value to search for</li>
 <li>Click search</li>
 </ol>
-
-<h2>Warning</h2>
-The application is still quite unstable. Make sure that all the information you enter in the connection panel is correct, as it may crash if it can't make the connection.

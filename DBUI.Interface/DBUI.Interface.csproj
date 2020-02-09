@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AppButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -54,6 +57,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferencePropertyPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="TableForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +98,10 @@
     <ProjectReference Include="..\DBUI.Business\DBUI.Business.csproj">
       <Project>{db9b3d25-144c-4d3f-b358-c9320ff3794a}</Project>
       <Name>DBUI.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DBUI.Models\DBUI.Models.csproj">
+      <Project>{17f6b2d5-6cf5-4f4b-b5c2-27481a6bc956}</Project>
+      <Name>DBUI.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

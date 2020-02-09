@@ -1,49 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing;
-using System.Data.SqlClient;
+using DBUI.Models;
 
-namespace DBUI.Business
+namespace DBUI.Interface
 {
-    public class ReferenceProperty : Panel
+    public class ReferencePropertyPanel : Panel
     {
-        private string displayAlias;
+        public bool IsSelected { get; set; } = false;
+        public string SqlName { get; private set; }
         private CheckBox check;
         private TextBox text;
 
-        public bool IsSelected { get; private set; }
-        public string ColumnName { get; private set; }
-        public string SqlCommand { get; private set; }
+        public string Text { get { return text.Text; } }
 
-        public ReferenceProperty(string alias, string columnName, string sql)
+        public ReferencePropertyPanel(Property bind)
         {
-            displayAlias = alias;
-            ColumnName = columnName;
-            SqlCommand = sql;
-
             Size = new Size(270, 60);
+            SqlName = bind.SqlName;
 
             check = new CheckBox
             {
-                Name = $"{ColumnName}Check",
-                Text = displayAlias,
+                Name = $"{bind.SqlName}Check",
+                Text = bind.DisplayAlias,
                 AutoSize = true,
                 Location = new Point(5, 5)
             };
-            check.CheckedChanged += new EventHandler(chk_CheckChanged);
+            check.CheckedChanged += new EventHandler(RpChk_CheckChanged);
             Controls.Add(check);
 
             text = new TextBox
             {
-                Name = $"{ColumnName}Textbox",
+                Name = $"{bind.SqlName}Textbox",
                 Size = new Size(255, 25),
                 Location = new Point(5, 30)
             };
-            text.GotFocus += new EventHandler(txt_Focused);
+            text.GotFocus += new EventHandler(RpTxt_Focused);
             Controls.Add(text);
         }
 
@@ -53,13 +49,8 @@ namespace DBUI.Business
             text.Text = string.Empty;
         }
 
-        public SqlParameter GetParameter()
-        {
-            return new SqlParameter(ColumnName, text.Text);
-        }
-
         //Event handlers
-        private void chk_CheckChanged(object sender, EventArgs e)
+        private void RpChk_CheckChanged(object sender, EventArgs e)
         {
             if ((sender as CheckBox).Checked)
             {
@@ -76,7 +67,7 @@ namespace DBUI.Business
             }
         }
 
-        private void txt_Focused(object sender, EventArgs e)
+        private void RpTxt_Focused(object sender, EventArgs e)
         {
             check.Checked = true;
         }

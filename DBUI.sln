@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBUI.Business", "DBUI.Busin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBUI.Data", "DBUI.Data\DBUI.Data.csproj", "{B86C1531-2753-44F6-9D11-520822F11F91}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBUI.Models", "DBUI.Models\DBUI.Models.csproj", "{17F6B2D5-6CF5-4F4B-B5C2-27481A6BC956}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B86C1531-2753-44F6-9D11-520822F11F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B86C1531-2753-44F6-9D11-520822F11F91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B86C1531-2753-44F6-9D11-520822F11F91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17F6B2D5-6CF5-4F4B-B5C2-27481A6BC956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17F6B2D5-6CF5-4F4B-B5C2-27481A6BC956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17F6B2D5-6CF5-4F4B-B5C2-27481A6BC956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17F6B2D5-6CF5-4F4B-B5C2-27481A6BC956}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

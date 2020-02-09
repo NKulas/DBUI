@@ -29,23 +29,28 @@
         private void InitializeComponent()
         {
             this.DataTableView = new System.Windows.Forms.DataGridView();
-            this.CloseButton = new DBUI.Business.AppButton();
+            this.CloseButton = new DBUI.Interface.AppButton();
             ((System.ComponentModel.ISupportInitialize)(this.DataTableView)).BeginInit();
             this.SuspendLayout();
             // 
             // DataTableView
             // 
+            this.DataTableView.AllowUserToAddRows = false;
+            this.DataTableView.AllowUserToDeleteRows = false;
+            this.DataTableView.AllowUserToOrderColumns = true;
+            this.DataTableView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
             this.DataTableView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.DataTableView.Location = new System.Drawing.Point(12, 12);
             this.DataTableView.Name = "DataTableView";
+            this.DataTableView.ReadOnly = true;
             this.DataTableView.Size = new System.Drawing.Size(776, 374);
             this.DataTableView.TabIndex = 0;
             // 
             // CloseButton
             // 
-            this.CloseButton.Location = new System.Drawing.Point(712, 404);
+            this.CloseButton.Location = new System.Drawing.Point(698, 404);
             this.CloseButton.Name = "CloseButton";
-            this.CloseButton.Size = new System.Drawing.Size(76, 34);
+            this.CloseButton.Size = new System.Drawing.Size(90, 34);
             this.CloseButton.TabIndex = 1;
             this.CloseButton.Text = "Close";
             this.CloseButton.UseVisualStyleBackColor = true;
@@ -69,6 +74,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView DataTableView;
-        private Business.AppButton CloseButton;
+        private AppButton CloseButton;
     }
 }
