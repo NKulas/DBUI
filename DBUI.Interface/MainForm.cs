@@ -15,7 +15,7 @@ namespace DBUI.Interface
 {
     public partial class MainForm : Form
     {
-        private ConnectionProfile connection;
+        private ConnectionProfile connectionData;
         private Entity referenceEntity;
 
         public MainForm()
@@ -41,37 +41,37 @@ namespace DBUI.Interface
 
         private void ConnectButton_Click(object sender, EventArgs e)
         {
-            connection = new ConnectionProfile();
+            connectionData = new ConnectionProfile();
             bool validInput = true;
             List<string> errors = new List<string>();
 
-            if (ServerTextbox.Text != string.Empty) connection.Server = ServerTextbox.Text;
+            if (ServerTextbox.Text != string.Empty) connectionData.Server = ServerTextbox.Text;
             else
             {
                 validInput = false;
                 errors.Add("server");
             }
 
-            if (DatabaseTextbox.Text != string.Empty) connection.Database = DatabaseTextbox.Text;
+            if (DatabaseTextbox.Text != string.Empty) connectionData.Database = DatabaseTextbox.Text;
             else
             {
                 validInput = false;
                 errors.Add("database");
             }
 
-            if (TableTextbox.Text != string.Empty) connection.Table = TableTextbox.Text;
+            if (TableTextbox.Text != string.Empty) connectionData.Table = TableTextbox.Text;
             else
             {
                 validInput = false;
                 errors.Add("table");
             }
 
-            if (AuthenticationCheckbox.Checked) connection.AuthenticationType = "Windows";
+            if (AuthenticationCheckbox.Checked) connectionData.AuthenticationType = "Windows";
             else
             {
-                connection.AuthenticationType = "Server";
+                connectionData.AuthenticationType = "Server";
 
-                if (UsernameTextbox.Text != string.Empty) connection.Username = UsernameTextbox.Text;
+                if (UsernameTextbox.Text != string.Empty) connectionData.Username = UsernameTextbox.Text;
                 else
                 {
                     validInput = false;
@@ -80,11 +80,7 @@ namespace DBUI.Interface
 
                 if (PasswordTextbox.Text != string.Empty)
                 {
-                    connection.Password = new SecureString();
-                    foreach (char c in PasswordTextbox.Text.ToCharArray())
-                    {
-                        connection.Password.AppendChar(c);
-                    }
+                    connectionData.Password = PasswordTextbox.Text;
                 }
                 else
                 {
@@ -95,7 +91,7 @@ namespace DBUI.Interface
 
             if (validInput)
             {
-                DbuiManager.Profile = connection;
+                DbuiManager.Profile = connectionData;
                 if (DbuiManager.TestConnection())
                 {
                     referenceEntity = new Entity();
@@ -145,29 +141,34 @@ namespace DBUI.Interface
         {
             int index = 0;
             Entity searchEntity = new Entity();
-            searchEntity.Properties = referenceEntity.Properties;
-            foreach (ReferencePropertyPanel rp in SearchPanel.Controls)
+            searchEntity.Properties = new List<Property>();
+            foreach (ReferencePropertyPanel rpp in SearchPanel.Controls)
             {
-                if (rp.IsSelected)
-                {
-                    referenceEntity.Properties[index].Value = rp.Text;
+                if (rpp.IsSelected)
+                {   
+                    searchEntity.Properties.Add(new Property
+                    {
+                        DisplayAlias = referenceEntity.Properties[index].DisplayAlias,
+                        SqlName = referenceEntity.Properties[index].SqlName,
+                        Value = rpp.UserText
+                    });
                 }
                 index++;
             }
 
-            if (DbuiManager.Search(referenceEntity))
+            List<Entity> result = DbuiManager.Search(searchEntity, out bool resultStatus);
+            if (resultStatus)
             {
-                //Data table is pulled out of manager for testing only! An entity object will be returned later on.
-                TableForm oForm = new TableForm(DbuiManager.result);
+                TableForm oForm = new TableForm(result);
                 oForm.ShowDialog();
             }
             else
             {
-                MessageBox.Show("You did not enter any search terms", "Alert", MessageBoxButtons.OK);
+                MessageBox.Show("No results were returned", "Alert", MessageBoxButtons.OK);
             }
         }
 
-        private void ClearSearchButton_Click(object sender, EventArgs e)
+        private void ResetSearchButton_Click(object sender, EventArgs e)
         {
             foreach (ReferencePropertyPanel rp in SearchPanel.Controls)
             {

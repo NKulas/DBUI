@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using DBUI.Models;
 
 namespace DBUI.Interface
 {
@@ -17,10 +18,28 @@ namespace DBUI.Interface
             InitializeComponent();
         }
 
-        public TableForm(DataTable dt)
+        public TableForm(List<Entity> entities)
         {
             InitializeComponent();
-            DataTableView.DataSource = dt;
+            DataTableView.ColumnCount = entities[0].Properties.Count;
+
+            for (int i = 0; i < DataTableView.ColumnCount; i++)
+            {
+                DataTableView.Columns[i].Name = entities[0].Properties[i].DisplayAlias;
+            }
+
+            for (int i = 0; i < entities.Count; i++)
+            {
+                string[] row = new string[DataTableView.ColumnCount];
+
+                for (int j = 0; j < DataTableView.ColumnCount; j++)
+                {
+                    row[j] = entities[i].Properties[j].Value;
+                }
+
+                DataTableView.Rows.Add(row);
+            }
+            
         }
 
         private void CloseButton_Click(object sender, EventArgs e)

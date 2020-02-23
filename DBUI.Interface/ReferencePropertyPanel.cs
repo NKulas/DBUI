@@ -16,17 +16,17 @@ namespace DBUI.Interface
         private CheckBox check;
         private TextBox text;
 
-        public string Text { get { return text.Text; } }
+        public string UserText { get { return text.Text; } }
 
-        public ReferencePropertyPanel(Property bind)
+        public ReferencePropertyPanel(Property tieback)
         {
             Size = new Size(270, 60);
-            SqlName = bind.SqlName;
+            SqlName = tieback.SqlName;
 
             check = new CheckBox
             {
-                Name = $"{bind.SqlName}Check",
-                Text = bind.DisplayAlias,
+                Name = $"{tieback.SqlName}Check",
+                Text = tieback.DisplayAlias,
                 AutoSize = true,
                 Location = new Point(5, 5)
             };
@@ -35,7 +35,7 @@ namespace DBUI.Interface
 
             text = new TextBox
             {
-                Name = $"{bind.SqlName}Textbox",
+                Name = $"{tieback.SqlName}Textbox",
                 Size = new Size(255, 25),
                 Location = new Point(5, 30)
             };

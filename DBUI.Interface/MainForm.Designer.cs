@@ -47,7 +47,7 @@
             this.ServerTextbox = new System.Windows.Forms.TextBox();
             this.VersionLabel = new System.Windows.Forms.Label();
             this.SearchButton = new DBUI.Interface.AppButton();
-            this.ClearSearchButton = new DBUI.Interface.AppButton();
+            this.ResetSearchButton = new DBUI.Interface.AppButton();
             this.ExitButton = new DBUI.Interface.AppButton();
             this.ConnectionPanel.SuspendLayout();
             this.SuspendLayout();
@@ -225,7 +225,7 @@
             this.VersionLabel.Name = "VersionLabel";
             this.VersionLabel.Size = new System.Drawing.Size(102, 20);
             this.VersionLabel.TabIndex = 7;
-            this.VersionLabel.Text = "Version 0.2.0";
+            this.VersionLabel.Text = "Version 0.3.0";
             // 
             // SearchButton
             // 
@@ -237,15 +237,15 @@
             this.SearchButton.UseVisualStyleBackColor = true;
             this.SearchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
-            // ClearSearchButton
+            // ResetSearchButton
             // 
-            this.ClearSearchButton.Location = new System.Drawing.Point(737, 242);
-            this.ClearSearchButton.Name = "ClearSearchButton";
-            this.ClearSearchButton.Size = new System.Drawing.Size(109, 48);
-            this.ClearSearchButton.TabIndex = 9;
-            this.ClearSearchButton.Text = "Clear";
-            this.ClearSearchButton.UseVisualStyleBackColor = true;
-            this.ClearSearchButton.Click += new System.EventHandler(this.ClearSearchButton_Click);
+            this.ResetSearchButton.Location = new System.Drawing.Point(737, 242);
+            this.ResetSearchButton.Name = "ResetSearchButton";
+            this.ResetSearchButton.Size = new System.Drawing.Size(109, 48);
+            this.ResetSearchButton.TabIndex = 9;
+            this.ResetSearchButton.Text = "Reset";
+            this.ResetSearchButton.UseVisualStyleBackColor = true;
+            this.ResetSearchButton.Click += new System.EventHandler(this.ResetSearchButton_Click);
             // 
             // ExitButton
             // 
@@ -262,7 +262,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(872, 606);
             this.Controls.Add(this.ExitButton);
-            this.Controls.Add(this.ClearSearchButton);
+            this.Controls.Add(this.ResetSearchButton);
             this.Controls.Add(this.SearchButton);
             this.Controls.Add(this.VersionLabel);
             this.Controls.Add(this.ConnectionPanel);
@@ -301,7 +301,7 @@
         private AppButton ClearConnectionButton;
         private AppButton ConnectButton;
         private AppButton SearchButton;
-        private AppButton ClearSearchButton;
+        private AppButton ResetSearchButton;
         private AppButton ExitButton;
     }
 }

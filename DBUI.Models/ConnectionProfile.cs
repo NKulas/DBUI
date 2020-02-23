@@ -16,7 +16,7 @@ namespace DBUI.Models
         //public CommonResources.AuthenticationType authentication { get; set; }
         public string AuthenticationType { get; set; }
         public string Username { get; set; }
-        public SecureString Password { get; set; }
+        public string Password { get; set; }
 
         public List<string> Permissions { get; } = new List<string>();
 

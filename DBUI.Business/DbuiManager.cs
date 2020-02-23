@@ -13,7 +13,6 @@ namespace DBUI.Business
     public static class DbuiManager
     {
         public static ConnectionProfile Profile { get; set; }
-        /*FOR TESTING ONLY*/public static DataTable result { get; private set; }
 
         private const string UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
@@ -22,7 +21,8 @@ namespace DBUI.Business
         public static bool TestConnection()
         {
             if (Profile.AuthenticationType == "Windows") DataAccess.ConnectionString = $"Server={Profile.Server}; Database={Profile.Database}; Integrated Security=SSPI;";
-            else DataAccess.ConnectionString = $"Provider=DQLOLEDB;Server={Profile.Server}; Database={Profile.Database};User Id={Profile.Username}; Password={Profile.Password}";
+            else DataAccess.ConnectionString = $"Server={Profile.Server}; Database={Profile.Database};User Id={Profile.Username}; Password={Profile.Password}";
+            //Provider=SQLOLEDB;
 
             if (DataAccess.TestConnection()) return true;
             else return false;
@@ -68,7 +68,7 @@ namespace DBUI.Business
             return properties;
         }
 
-        public static bool Search(Entity entity)
+        public static List<Entity> Search(Entity entity, out bool resultStatus)
         {
             string commandString = $"SELECT * FROM {Profile.Table} WHERE ";
             List<SqlParameter> parameters = new List<SqlParameter>();
@@ -93,14 +93,46 @@ namespace DBUI.Business
                 }
             }
 
-            if (numberOfConditions == 0) return false;
+            if (numberOfConditions == 0) {
+                resultStatus = false;
+                return null;
+            }
             else
             {
                 commandString += ";";
                 try
                 {
-                    result = DataAccess.Query(commandString, parameters.ToArray());
-                    return true;
+                    DataTable result = DataAccess.Query(commandString, parameters.ToArray());
+
+                    if (result != null && (result.Rows.Count != 0))
+                    {
+                        List<Entity> returnList = new List<Entity>();
+                        foreach (DataRow r in result.Rows)
+                        {
+                            Entity resultEntity = new Entity();
+                            resultEntity.Properties = new List<Property>();
+
+                            int counter = 0;
+                            foreach (var c in result.Columns)
+                            {
+                                resultEntity.Properties.Add(new Property
+                                {
+                                    SqlName = c.ToString(),
+                                    DisplayAlias = c.ToString(),
+                                    Value = r.ItemArray[counter].ToString()
+                                });
+                                counter++;
+                            }
+                            returnList.Add(resultEntity);
+                        }
+                        resultStatus = true;
+                        return returnList;
+                    }
+                    else
+                    {
+                        resultStatus = false;
+                        return null;
+                    }
                 }
                 catch
                 {
