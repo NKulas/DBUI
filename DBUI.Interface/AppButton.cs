@@ -18,13 +18,13 @@ namespace DBUI.Interface
             MouseUp += new MouseEventHandler(AppBtn_MouseUp);*/
         }
 
-        public static void AppBtn_MouseEnter(object sender, EventArgs e)
+        private static void AppBtn_MouseEnter(object sender, EventArgs e)
         {
             (sender as Button).BackColor = Color.SteelBlue;
             (sender as Button).ForeColor = Color.White;
         }
 
-        public static void AppBtn_MouseLeave(object sender, EventArgs e)
+        private static void AppBtn_MouseLeave(object sender, EventArgs e)
         {
             (sender as Button).BackColor = Color.Transparent;
             (sender as Button).ForeColor = Color.Black;

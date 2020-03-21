@@ -15,12 +15,48 @@ namespace DBUI.Interface
 {
     public partial class MainForm : Form
     {
-        private ConnectionProfile connectionData;
-        private Entity referenceEntity;
+        private ConnectionProfile connectionData = new ConnectionProfile();
+        private CommonAppObject referenceObject = new CommonAppObject(CommonAppObjectType.Server);
+        private Entity referenceEntity = new Entity();
 
         public MainForm()
         {
             InitializeComponent();
+            DatabaseTextbox.DisplayMember = "InternalName";
+            referenceEntity.Properties = new List<Property>();
+        }
+
+        private bool SetCredentials()
+        {
+            bool validInput = true;
+
+            if (AuthenticationCheckbox.Checked) connectionData.AuthenticationType = AuthenticationType.Windows;
+            else
+            {
+                connectionData.AuthenticationType = AuthenticationType.Server;
+
+                if (UsernameTextbox.Text != string.Empty) connectionData.Username = UsernameTextbox.Text;
+                else
+                {
+                    validInput = false;
+                }
+
+                if (PasswordTextbox.Text != string.Empty)
+                {
+                    connectionData.Password = PasswordTextbox.Text;
+                }
+                else
+                {
+                    validInput = false;
+                }
+            }
+
+            if (validInput)
+            {
+                DbuiManager.Profile = connectionData;
+            }
+
+            return validInput;
         }
 
         private void AuthenticationCheckbox_CheckedChanged(object sender, EventArgs e)
@@ -41,88 +77,120 @@ namespace DBUI.Interface
 
         private void ConnectButton_Click(object sender, EventArgs e)
         {
-            connectionData = new ConnectionProfile();
             bool validInput = true;
             List<string> errors = new List<string>();
 
-            if (ServerTextbox.Text != string.Empty) connectionData.Server = ServerTextbox.Text;
-            else
+            if (ServerTextbox.Text == string.Empty)
             {
                 validInput = false;
                 errors.Add("server");
             }
-
-            if (DatabaseTextbox.Text != string.Empty) connectionData.Database = DatabaseTextbox.Text;
             else
+            {
+                connectionData.Server = ServerTextbox.Text;
+            }
+
+            if (DatabaseTextbox.Text == string.Empty)
             {
                 validInput = false;
                 errors.Add("database");
             }
-
-            if (TableTextbox.Text != string.Empty) connectionData.Table = TableTextbox.Text;
             else
+            {
+                connectionData.Database = DatabaseTextbox.Text;
+            }
+
+            if (SchemaTextbox.Text == string.Empty)
+            {
+                validInput = false;
+                errors.Add("schema");
+            }
+            else
+            {
+                connectionData.Schema = SchemaTextbox.Text;
+            }
+
+            if (TableTextbox.Text == string.Empty)
             {
                 validInput = false;
                 errors.Add("table");
             }
-
-            if (AuthenticationCheckbox.Checked) connectionData.AuthenticationType = "Windows";
             else
             {
-                connectionData.AuthenticationType = "Server";
+                connectionData.Table = TableTextbox.Text;
+            }
 
-                if (UsernameTextbox.Text != string.Empty) connectionData.Username = UsernameTextbox.Text;
-                else
+            if (!AuthenticationCheckbox.Checked)
+            {
+                connectionData.AuthenticationType = AuthenticationType.Server;
+
+                if (UsernameTextbox.Text == string.Empty)
                 {
                     validInput = false;
                     errors.Add("username");
                 }
-
-                if (PasswordTextbox.Text != string.Empty)
-                {
-                    connectionData.Password = PasswordTextbox.Text;
-                }
                 else
+                {
+                    connectionData.Username = UsernameTextbox.Text;
+                }
+
+                if (PasswordTextbox.Text == string.Empty)
                 {
                     validInput = false;
                     errors.Add("password");
                 }
+                else
+                {
+                    connectionData.Password = PasswordTextbox.Text;
+                }
+            }
+            else
+            {
+                connectionData.AuthenticationType = AuthenticationType.Windows;
             }
 
             if (validInput)
             {
+                SearchPanel.ClearControls();
+                referenceEntity.Properties = new List<Property>();
                 DbuiManager.Profile = connectionData;
-                if (DbuiManager.TestConnection())
-                {
-                    referenceEntity = new Entity();
-                    referenceEntity.Properties = DbuiManager.GetProperties();
+                DbuiManager.Profile.Table = TableTextbox.Text;
 
-                    SearchPanel.Controls.Clear();
-                    foreach (Property p in referenceEntity.Properties)
+                try
+                {
+                    List<Property> lp = DbuiManager.GetProperties();
+                    foreach (Property p in lp)
                     {
-                        SearchPanel.Controls.Add(new ReferencePropertyPanel(p));
+                        referenceEntity.Properties.Add(p);
+                        ReferencePropertyPanel pan = new ReferencePropertyPanel(p);
+                        SearchPanel.AddControl(pan);
                     }
                 }
-                else MessageBox.Show("Can't establish connection", "Alert", MessageBoxButtons.OK);
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
             else
             {
-                string errorString = "The following fields can't be empty: ";
+                string errorMessage = "The following fields can't be empty: ";
                 bool firstError = true;
-                foreach (string s in errors)
+
+                foreach (string error in errors)
                 {
-                    if (firstError)
+                    if (!firstError)
                     {
-                        errorString += $"{s}";
-                        firstError = false;
+                        errorMessage += ", ";
                     }
                     else
                     {
-                        errorString += $", {s}";
+                        firstError = false;
                     }
+
+                    errorMessage += error;
                 }
 
-                MessageBox.Show(errorString, "Error", MessageBoxButtons.OK);
+                MessageBox.Show(errorMessage);
             }
         }
 
@@ -142,7 +210,7 @@ namespace DBUI.Interface
             int index = 0;
             Entity searchEntity = new Entity();
             searchEntity.Properties = new List<Property>();
-            foreach (ReferencePropertyPanel rpp in SearchPanel.Controls)
+            foreach (ReferencePropertyPanel rpp in SearchPanel.ControlList)
             {
                 if (rpp.IsSelected)
                 {   
@@ -179,6 +247,71 @@ namespace DBUI.Interface
         private void ExitButton_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        } 
+        }
+
+        private void DatabaseTextbox_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                referenceObject.InternalName = ServerTextbox.Text;
+
+                if (SetCredentials())
+                {
+                    referenceObject.Children.Clear();
+                    DbuiManager.UpdateChildren(referenceObject);
+
+                    DatabaseTextbox.DataSource = null;
+                    DatabaseTextbox.DataSource = referenceObject.Children;
+                    DatabaseTextbox.DisplayMember = "InternalName";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
+
+        private void SchemaTextbox_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                if (SetCredentials())
+                {
+                    (DatabaseTextbox.SelectedItem as CommonAppObject).Children.Clear();
+                    DbuiManager.Profile.Server = ServerTextbox.Text;
+                    DbuiManager.UpdateChildren(DatabaseTextbox.SelectedItem as CommonAppObject);
+
+                    SchemaTextbox.DataSource = null;
+                    SchemaTextbox.DataSource = (DatabaseTextbox.SelectedItem as CommonAppObject).Children;
+                    SchemaTextbox.DisplayMember = "InternalName";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
+
+        private void TableTextbox_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                if (SetCredentials())
+                {
+                    (SchemaTextbox.SelectedItem as CommonAppObject).Children.Clear();
+                    DbuiManager.Profile.Server = ServerTextbox.Text;
+                    DbuiManager.Profile.Database = DatabaseTextbox.Text;
+                    DbuiManager.UpdateChildren(SchemaTextbox.SelectedItem as CommonAppObject);
+
+                    TableTextbox.DataSource = null;
+                    TableTextbox.DataSource = (SchemaTextbox.SelectedItem as CommonAppObject).Children;
+                    TableTextbox.DisplayMember = "InternalName";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error");
+            }
+        }
     }
 }

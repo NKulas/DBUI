@@ -11,10 +11,11 @@ namespace DBUI.Models
     {
         public string Server { get; set; }
         public string Database { get; set; }
+        public string Schema { get; set; }
         public string Table { get; set; }
 
         //public CommonResources.AuthenticationType authentication { get; set; }
-        public string AuthenticationType { get; set; }
+        public AuthenticationType AuthenticationType { get; set; }
         public string Username { get; set; }
         public string Password { get; set; }
 
