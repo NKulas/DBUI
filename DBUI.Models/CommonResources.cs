@@ -18,6 +18,7 @@ namespace DBUI.Models
         Database,
         Schema,
         Table,
-        Column
+        Column,
+        Property
     }
 }

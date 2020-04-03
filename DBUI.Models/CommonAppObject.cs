@@ -12,11 +12,12 @@ namespace DBUI.Models
         public CommonAppObjectType ObjectType { get; private set; }
         public string FriendlyName { get; set; }
         public string InternalName { get; set; }
-        public List<CommonAppObject> Children { get; } = new List<CommonAppObject>();
+        public List<CommonAppObject> Children { get; }
 
         public CommonAppObject(CommonAppObjectType objectType)
         {
             ObjectType = objectType;
+            Children = new List<CommonAppObject>();
         }
     }
 }

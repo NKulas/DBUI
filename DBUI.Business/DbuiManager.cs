@@ -18,31 +18,50 @@ namespace DBUI.Business
         private const string LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
         private const string NUMBERS = "0123456789";
 
+        private static void BuildConnectionString()
+        {
+            SqlConnectionStringBuilder connectionBuilder = new SqlConnectionStringBuilder();
+
+            if (Profile.Server != null)
+            {
+                connectionBuilder.DataSource = Profile.Server;
+            }
+
+            if (Profile.Database != null)
+            {
+                connectionBuilder.InitialCatalog = Profile.Database;
+            }
+
+            if (Profile.AuthenticationType == AuthenticationType.Windows)
+            {
+                connectionBuilder.IntegratedSecurity = true;
+            }
+            else
+            {
+                connectionBuilder.IntegratedSecurity = false;
+                connectionBuilder.UserID = Profile.Username;
+                connectionBuilder.Password = Profile.Password;
+            }
+
+            DataAccess.ConnectionString = connectionBuilder.ConnectionString;
+        }
+
         public static bool TestConnection()
         {
-            if (Profile.AuthenticationType == AuthenticationType.Windows) DataAccess.ConnectionString = $"Server={Profile.Server}; Database={Profile.Database}; Integrated Security=SSPI;";
-            else DataAccess.ConnectionString = $"Server={Profile.Server}; Database={Profile.Database};User Id={Profile.Username}; Password={Profile.Password}";
-            //Provider=SQLOLEDB;
+            BuildConnectionString();
 
             if (DataAccess.TestConnection()) return true;
             else return false;
         }
 
-        private static void FormConnectionString()
-        {
-            if (Profile.AuthenticationType == AuthenticationType.Windows) DataAccess.ConnectionString = $"Server={Profile.Server}; Database={Profile.Database}; Integrated Security=SSPI;";
-            else DataAccess.ConnectionString = $"Server={Profile.Server}; Database={Profile.Database};User Id={Profile.Username}; Password={Profile.Password}";
-        }
-
-        //Current work area
         public static void UpdateChildren(CommonAppObject caa)
         {
-            if (Profile.AuthenticationType == AuthenticationType.Windows) DataAccess.ConnectionString = $"Server={caa.InternalName}; Integrated Security=SSPI;";
-            else DataAccess.ConnectionString = $"Server={caa.InternalName}; User Id={Profile.Username}; Password={Profile.Password}";
+            BuildConnectionString();
 
             switch (caa.ObjectType)
             {
                 case CommonAppObjectType.Server:
+
                     DataTable result = DataAccess.Query($"SELECT * FROM master.dbo.sysdatabases;");
                     foreach (DataRow row in result.Rows)
                     {
@@ -51,8 +70,6 @@ namespace DBUI.Business
                     break;
 
                 case CommonAppObjectType.Database:
-                    if (Profile.AuthenticationType == AuthenticationType.Windows) DataAccess.ConnectionString = $"Server={Profile.Server}; Database={caa.InternalName}; Integrated Security=SSPI;";
-                    else DataAccess.ConnectionString = $"Server={Profile.Server}; Database={caa.InternalName};User Id={Profile.Username}; Password={Profile.Password}";
 
                     result = DataAccess.Query($"SELECT * FROM sys.schemas;");
                     foreach (DataRow row in result.Rows)
@@ -62,148 +79,132 @@ namespace DBUI.Business
                     break;
 
                 case CommonAppObjectType.Schema:
-                    if (Profile.AuthenticationType == AuthenticationType.Windows) DataAccess.ConnectionString = $"Server={Profile.Server}; Database={Profile.Database}; Integrated Security=SSPI;";
-                    else DataAccess.ConnectionString = $"Server={Profile.Server}; Database={Profile.Database}; User Id={Profile.Username}; Password={Profile.Password}";
 
                     result = DataAccess.Query($"SELECT name FROM sys.tables WHERE schema_id = SCHEMA_ID('{caa.InternalName}');");
                     //result = DataAccess.Query($"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES;");
                     foreach (DataRow row in result.Rows)
                     {
-                        caa.Children.Add(new CommonAppObject(CommonAppObjectType.Database) { InternalName = row[0].ToString() });
+                        caa.Children.Add(new CommonAppObject(CommonAppObjectType.Table) { InternalName = row[0].ToString() });
                     }
                     break;
 
                 case CommonAppObjectType.Table:
-                    result = DataAccess.Query($"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = {caa.InternalName};");
+
+                    result = DataAccess.Query($"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{caa.InternalName}';");
                     foreach (DataRow row in result.Rows)
                     {
-                        caa.Children.Add(new CommonAppObject(CommonAppObjectType.Database) { InternalName = row[0].ToString() });
+                        caa.Children.Add(
+                            new CommonAppObject(CommonAppObjectType.Column)
+                            {
+                                InternalName = row[0].ToString(),
+                                FriendlyName = GuessFriendlyName(row[0].ToString())
+                            });
                     }
                     break;
 
-                case CommonAppObjectType.Column:
+                //case CommonAppObjectType.Column:
+
                 default:
-                    throw new Exception();
+                    throw new Exception("An invalid CommonAppObject type was given");
             }
-            
+
         }
         //Get schemas: SELECT * FROM sys.schemas;
         //Get tables: SELECT * FROM sys.tables WHERE schema_id = SCHEMA_ID('dbo');
         //Get columns: SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = (table name);
 
-        public static List<Property> GetProperties()
-        {
-            FormConnectionString();
-
-            SqlParameter[] parameters = new SqlParameter[1] { new SqlParameter("tableName", Profile.Table) };
-            DataTable names = DataAccess.Query($"SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = @tableName;", parameters);
-
-            List<Property> properties = new List<Property>();
-            foreach (DataRow name in names.Rows)
-            {
-                Property property = new Property();
-                property.SqlName = name[0].ToString();
-
-                string finalName = "";
-                bool lastUpper = false;
-                bool lastLower = false;
-                bool lastNumber = false;
-                foreach (char c in name[0].ToString().ToCharArray())
-                {
-                    bool thisUpper = UPPERCASE.Contains(c);
-                    bool thisLower = LOWERCASE.Contains(c);
-                    bool thisNumber = NUMBERS.Contains(c);
-
-                    //Try to intelligently guess what the human readable form is
-                    if (thisUpper && lastLower) finalName += $" {c}";
-                    else if (thisUpper && lastUpper) finalName += $"{c}";
-
-                    else if (thisNumber && (lastUpper || lastLower)) finalName += $" {c}";
-                    else if (thisNumber && lastNumber) finalName += $"{c}";
-                    else finalName += $"{c}";
-
-                    lastUpper = thisUpper;
-                    lastLower = thisLower;
-                    lastNumber = thisNumber;
-                }
-                property.DisplayAlias = finalName;
-
-                properties.Add(property);
-            }
-            return properties;
-        }
-
-        public static List<Entity> Search(Entity entity, out bool resultStatus)
+        public static List<Entity> Search(Dictionary<string, string> searchTerms, CommonAppObject table, out bool resultsReturned)
         {
             string commandString = $"SELECT * FROM {Profile.Table} WHERE ";
             List<SqlParameter> parameters = new List<SqlParameter>();
             bool firstWhere = true;
             int numberOfConditions = 0;
 
-            foreach (Property p in entity.Properties)
+            foreach (string key in searchTerms.Keys)
             {
-                if (!string.IsNullOrWhiteSpace(p.Value))
+                if (!string.IsNullOrWhiteSpace(searchTerms[key]))
                 {
                     if (firstWhere)
                     {
-                        commandString += $"{p.SqlName} = @{p.SqlName}";
+                        commandString += $"{key} = @{key}";
                         firstWhere = false;
                     }
                     else
                     {
-                        commandString += $" AND {p.SqlName} = @{p.SqlName}";
+                        commandString += $" AND {key} = @{key}";
                     }
-                    parameters.Add(new SqlParameter($"{p.SqlName}", p.Value));
+                    parameters.Add(new SqlParameter($"{key}", searchTerms[key]));
                     numberOfConditions++;
                 }
             }
 
-            if (numberOfConditions == 0) {
-                resultStatus = false;
-                return null;
-            }
-            else
+            commandString += ";";
+            try
             {
-                commandString += ";";
-                try
-                {
-                    DataTable result = DataAccess.Query(commandString, parameters.ToArray());
+                DataTable result = DataAccess.Query(commandString, parameters.ToArray());
 
-                    if (result != null && (result.Rows.Count != 0))
+                if (result != null && (result.Rows.Count != 0))
+                {
+                    List<Entity> returnList = new List<Entity>();
+                    foreach (DataRow row in result.Rows)
                     {
-                        List<Entity> returnList = new List<Entity>();
-                        foreach (DataRow r in result.Rows)
+                        Entity resultEntity = new Entity();
+
+                        int counter = 0;
+                        foreach (var column in result.Columns)
                         {
-                            Entity resultEntity = new Entity();
-                            resultEntity.Properties = new List<Property>();
-
-                            int counter = 0;
-                            foreach (var c in result.Columns)
+                            Property newProperty = new Property()
                             {
-                                resultEntity.Properties.Add(new Property
-                                {
-                                    SqlName = c.ToString(),
-                                    DisplayAlias = c.ToString(),
-                                    Value = r.ItemArray[counter].ToString()
-                                });
-                                counter++;
-                            }
-                            returnList.Add(resultEntity);
+                                FriendlyName = GuessFriendlyName(column.ToString()),
+                                InternalName = column.ToString(),
+                                Value = row[counter].ToString()
+                            };
+
+                            table.Children.FirstOrDefault(x => x.InternalName == column.ToString()).Children.Add(newProperty);
+                            resultEntity.Properties.Add(newProperty);
+
+                            counter++;
                         }
-                        resultStatus = true;
-                        return returnList;
+                        returnList.Add(resultEntity);
                     }
-                    else
-                    {
-                        resultStatus = false;
-                        return null;
-                    }
+                    resultsReturned = true;
+                    return returnList;
                 }
-                catch
+                else
                 {
-                    throw;
+                    resultsReturned = false;
+                    return null;
                 }
             }
+            catch
+            {
+                throw;
+            }
+        }
+
+        private static string GuessFriendlyName(string internalName)
+        {
+            string result = "";
+            bool lastUpper = false;
+            bool lastLower = false;
+            bool lastNumber = false;
+
+            foreach (char c in internalName)
+            {
+                bool thisUpper = UPPERCASE.Contains(c);
+                bool thisLower = LOWERCASE.Contains(c);
+                bool thisNumber = NUMBERS.Contains(c);
+
+                if (lastLower && thisUpper) { result += $" {c}"; }
+                else if (lastNumber && (thisUpper || thisLower)) result += $" {c}";
+                else result += c;
+
+                lastUpper = thisUpper;
+                lastLower = thisLower;
+                lastNumber = thisNumber;
+            }
+
+            return result;
         }
     }
 }

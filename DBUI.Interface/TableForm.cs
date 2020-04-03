@@ -25,7 +25,7 @@ namespace DBUI.Interface
 
             for (int i = 0; i < DataTableView.ColumnCount; i++)
             {
-                DataTableView.Columns[i].Name = entities[0].Properties[i].DisplayAlias;
+                DataTableView.Columns[i].Name = entities[0].Properties[i].FriendlyName;
             }
 
             for (int i = 0; i < entities.Count; i++)

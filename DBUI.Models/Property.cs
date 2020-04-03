@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace DBUI.Models
 {
-    public class Property
+    public class Property : CommonAppObject
     {
-        public string DisplayAlias { get; set; }
-        public string SqlName { get; set; }
         public string Value { get; set; }
+
+        public Property() : base(CommonAppObjectType.Property)
+        {
+            //TODO: some inherited properties are not used, look into better structuring
+        }
     }
 }

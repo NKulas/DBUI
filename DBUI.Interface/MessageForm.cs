@@ -17,18 +17,13 @@ namespace DBUI.Interface
             InitializeComponent();
 
             Text = title;
-            MessageLabel.Text = message;
+            MessageTextbox.Text = message;
         }
+
 
         private void CloseButton_Click(object sender, EventArgs e)
         {
             Close();
-        }
-
-        [Browsable(false)]
-        new public void Show()
-        {
-            throw new Exception("This form can only be shown as a dialog");
         }
     }
 }

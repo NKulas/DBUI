@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.DataTableView = new System.Windows.Forms.DataGridView();
-            this.CloseButton = new DBUI.Interface.AppButton();
+            this.CloseButton = new DBUI.CustomControls.DbuiButton();
             ((System.ComponentModel.ISupportInitialize)(this.DataTableView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,6 +74,6 @@
         #endregion
 
         private System.Windows.Forms.DataGridView DataTableView;
-        private AppButton CloseButton;
+        private CustomControls.DbuiButton CloseButton;
     }
 }
