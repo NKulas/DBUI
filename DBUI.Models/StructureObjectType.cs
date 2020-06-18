@@ -6,19 +6,12 @@ using System.Threading.Tasks;
 
 namespace DBUI.Models
 {
-    public enum AuthenticationType
-    {
-        Server, 
-        Windows
-    }
-
-    public enum CommonAppObjectType
+    public enum StructureObjectType
     {
         Server,
         Database,
         Schema,
         Table,
-        Column,
-        Property
+        Column
     }
 }

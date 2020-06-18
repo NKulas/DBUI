@@ -41,8 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbuiManager.cs" />
+    <Compile Include="DataManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StructureManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DBUI.Data\DBUI.Data.csproj">

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using DBUI.Models;
 
-namespace DBUI.Interface
+namespace DBUI.CustomControls
 {
-    public class PropertyPanel : Panel
+    public class PropertyDisplayPanel : Panel
     {
         public bool IsSelected { get; private set; }
         public string InternalName { get; }
@@ -24,7 +24,7 @@ namespace DBUI.Interface
         private CheckBox check;
         private TextBox text;
 
-        public PropertyPanel(CommonAppObject columnTieback)
+        public PropertyDisplayPanel(StructureObject columnTieback)
         {
             Size = new Size(270, 60);
             IsSelected = false;

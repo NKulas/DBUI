@@ -55,7 +55,16 @@
       <DependentUpon>FlowGroupbox.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyDisplayPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DBUI.Models\DBUI.Models.csproj">
+      <Project>{17f6b2d5-6cf5-4f4b-b5c2-27481a6bc956}</Project>
+      <Name>DBUI.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

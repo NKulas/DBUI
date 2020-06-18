@@ -8,11 +8,11 @@ namespace DBUI.Models
 {
     public class Entity
     {
-        public List<Property> Properties { get; }
+        public Dictionary<StructureObject, string> Properties { get; }
 
         public Entity()
         {
-            Properties = new List<Property>();
+            Properties = new Dictionary<StructureObject, string>();
         }
     }
 }

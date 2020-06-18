@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DBUI.Models
 {
-    public class Property
+    public enum AuthenticationType
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
+        Windows,
+        Server
     }
 }

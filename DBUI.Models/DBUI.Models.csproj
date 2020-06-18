@@ -41,12 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommonAppObject.cs" />
-    <Compile Include="CommonResources.cs" />
+    <Compile Include="AuthenticationType.cs" />
     <Compile Include="ConnectionProfile.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Property.cs" />
+    <Compile Include="StructureObject.cs" />
+    <Compile Include="StructureObjectType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
