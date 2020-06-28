@@ -24,17 +24,15 @@ namespace DBUI.Interface
             Setup();
         }
 
+        public ConnectionForm()
+        {
+            InitializeComponent();
+
+            profile = new ConnectionProfile();
+        }
+
         private void Setup()
         {
-            cbxDatabase.ValueMember = "InternalName";
-            cbxDatabase.DisplayMember = "InternalName";
-
-            cbxSchema.ValueMember = "InternalName";
-            cbxSchema.DisplayMember = "InternalName";
-
-            cbxTable.ValueMember = "InternalName";
-            cbxTable.DisplayMember = "InternalName";
-
             if (profile.Server != null)
             {
                 txtServer.Text = profile.Server.InternalName;
@@ -72,9 +70,7 @@ namespace DBUI.Interface
             if ((sender as CheckBox).Checked)
             {
                 txtUsername.Enabled = false;
-                txtUsername.Text = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                 txtPassword.Enabled = false;
-                txtPassword.Text = string.Empty;
             }
             else
             {
@@ -86,7 +82,15 @@ namespace DBUI.Interface
         private void btnConnect_Click(object sender, EventArgs e)
         {
             UpdateProfile();
-            Close();
+
+            if (profile.ValidateComplete())
+            {
+                new SearchForm(profile).ShowDialog();
+            }
+            else
+            {
+                new MessageForm("Alert", "You did not enter all the required information.").ShowDialog();
+            }
         }
 
         private void UpdateProfile()
@@ -127,7 +131,7 @@ namespace DBUI.Interface
             };
         }
 
-        private void cbxDatabase_DropDown(object sender, EventArgs e)
+        private async void cbxDatabase_DropDown(object sender, EventArgs e)
         {
             if (txtServer.Text != string.Empty)
             {
@@ -140,16 +144,21 @@ namespace DBUI.Interface
 
                 try
                 {
-                    cbxDatabase.DataSource = StructureManager.QueryChildren(server, profile);
+                    prbDatabase.Style = ProgressBarStyle.Marquee;
+                    cbxDatabase.DataSource = await StructureManager.QueryChildren(server, profile);
                 }
                 catch (Exception ex)
                 {
                     new MessageForm("Error", ex.Message);
                 }
+                finally
+                {
+                    prbDatabase.Style = ProgressBarStyle.Blocks;
+                }
             }
         }
 
-        private void cbxSchema_DropDown(object sender, EventArgs e)
+        private async void cbxSchema_DropDown(object sender, EventArgs e)
         {
             UpdateProfile();
 
@@ -162,16 +171,21 @@ namespace DBUI.Interface
 
                 try
                 {
-                    cbxSchema.DataSource = StructureManager.QueryChildren(database, profile);
+                    prbSchema.Style = ProgressBarStyle.Marquee;
+                    cbxSchema.DataSource = await StructureManager.QueryChildren(database, profile);
                 }
                 catch (Exception ex)
                 {
                     new MessageForm("Error", ex.Message);
                 }
+                finally
+                {
+                    prbSchema.Style = ProgressBarStyle.Blocks;
+                }
             }
         }
 
-        private void cbxTable_DropDown(object sender, EventArgs e)
+        private async void cbxTable_DropDown(object sender, EventArgs e)
         {
             UpdateProfile();
 
@@ -184,11 +198,16 @@ namespace DBUI.Interface
 
                 try
                 {
-                    cbxTable.DataSource = StructureManager.QueryChildren(schema, profile);
+                    prbTable.Style = ProgressBarStyle.Marquee;
+                    cbxTable.DataSource = await StructureManager.QueryChildren(schema, profile);
                 }
                 catch (Exception ex)
                 {
                     new MessageForm("Error", ex.Message);
+                }
+                finally
+                {
+                    prbTable.Style = ProgressBarStyle.Blocks;
                 }
             }
         }

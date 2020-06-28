@@ -6,9 +6,8 @@ This project provides a graphical user interface that makes it easy to search an
 
 <h2>How to use</h2>
 <ol>
-<li>Select "Manage Connection."</li>
-<li>Enter the information for the database. Once some inforamtion is entered, the dropdowns can be used to find the rest.</li>
-<li>Click "Connect" to return to the search screen.</li>
-<li>Check the properties you want to search by and enter the value to search for.</li>
+<li>Enter the required information for connecting to the database.You can type it manually. Alternately, if all information for higher tiers is entered, the dropdowns will query the database and populate with a list of options.</li>
+<li>Once all information is entered, click "Connect."</li>
+<li>Check each property to use as a search term and enter the value to search for.</li>
 <li>Click "Search."</li>
 </ol>

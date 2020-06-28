@@ -16,72 +16,59 @@ namespace DBUI.Business
         private const string LOWERCASE = "abcdefghijklmnopqrstuvwxyz";
         private const string NUMBERS = "0123456789";
 
-        public static List<StructureObject> QueryChildren(StructureObject parent, ConnectionProfile profile)
+        public static async Task<List<StructureObject>> QueryChildren(StructureObject parent, ConnectionProfile profile)
         {
             DataAccess.ConnectionString = profile.GetConnectionString();
             List<StructureObject> children = new List<StructureObject>();
+            string query;
+            StructureObjectType childType;
 
             switch (parent.ObjectType)
             {
                 case StructureObjectType.Server:
-
-                    DataTable result = DataAccess.Query($"SELECT * FROM master.dbo.sysdatabases;");
-                    foreach (DataRow row in result.Rows)
-                    {
-                        children.Add(
-                            new StructureObject(StructureObjectType.Database)
-                            {
-                                InternalName = row[0].ToString(),
-                                FriendlyName = GuessFriendlyName(row[0].ToString())
-                            }
-                        );
-                    }
+                    query = $"SELECT * FROM master.dbo.sysdatabases;";
+                    childType = StructureObjectType.Database;
                     break;
 
                 case StructureObjectType.Database:
-
-                    result = DataAccess.Query($"SELECT * FROM sys.schemas;");
-                    foreach (DataRow row in result.Rows)
-                    {
-                        children.Add(
-                            new StructureObject(StructureObjectType.Schema)
-                            {
-                                InternalName = row[0].ToString(),
-                                FriendlyName = GuessFriendlyName(row[0].ToString())
-                            }
-                        );
-                    }
+                    query = $"SELECT * FROM sys.schemas;";
+                    childType = StructureObjectType.Schema;
                     break;
 
                 case StructureObjectType.Schema:
-
-                    result = DataAccess.Query($"SELECT name FROM sys.tables WHERE schema_id = SCHEMA_ID('{parent.InternalName}');");
-                    foreach (DataRow row in result.Rows)
-                    {
-                        children.Add(
-                            new StructureObject(StructureObjectType.Table)
-                            {
-                                InternalName = row[0].ToString(),
-                                FriendlyName = GuessFriendlyName(row[0].ToString())
-                            }
-                        );
-                    }
+                    query = $"SELECT name FROM sys.tables WHERE schema_id = SCHEMA_ID('{parent.InternalName}');";
+                    childType = StructureObjectType.Table;
                     break;
 
                 case StructureObjectType.Table:
-
-                    result = DataAccess.Query($"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{parent.InternalName}';");
-                    foreach (DataRow row in result.Rows)
-                    {
-                        children.Add(
-                            new StructureObject(StructureObjectType.Column)
-                            {
-                                InternalName = row[0].ToString(),
-                                FriendlyName = GuessFriendlyName(row[0].ToString())
-                            }
-                        );
-                    }
+                    query = $"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{parent.InternalName}';";
+                    childType = StructureObjectType.Column;
                     break;
+
+                default:
+                    query = "";
+                    childType = StructureObjectType.Column;
+                    break;
+            }
+
+            try
+            {
+                DataTable result = await DataAccess.QueryAsync(query);
+
+                foreach (DataRow row in result.Rows)
+                {
+                    children.Add(
+                        new StructureObject(childType)
+                        {
+                            InternalName = row[0].ToString(),
+                            FriendlyName = GuessFriendlyName(row[0].ToString())
+                        }
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
 
             return children;

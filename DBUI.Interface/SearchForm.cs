@@ -25,7 +25,14 @@ namespace DBUI.Interface
             SetProperties();
         }
 
-        private void SetProperties()
+        public SearchForm(ConnectionProfile _profile)
+        {
+            InitializeComponent();
+            profile = _profile;
+            SetProperties();
+        }
+
+        private async void SetProperties()
         {
             gbxSearch.ClearControls();
 
@@ -35,7 +42,7 @@ namespace DBUI.Interface
 
                 try
                 {
-                    columns = StructureManager.QueryChildren(profile.Table, profile);
+                    columns = await StructureManager.QueryChildren(profile.Table, profile);
 
                     foreach (StructureObject column in columns)
                     {
@@ -76,7 +83,7 @@ namespace DBUI.Interface
                     }
                     else
                     {
-                        new MessageForm("Alert", "No results were returned").ShowDialog();
+                        new MessageForm("Alert", "No results were returned.").ShowDialog();
                     }
                 }
                 catch (Exception ex)
@@ -86,14 +93,13 @@ namespace DBUI.Interface
             }
             else
             {
-                new MessageForm("Alert", "You did not enter any search terms").ShowDialog();
+                new MessageForm("Alert", "You did not enter any search terms.").ShowDialog();
             }
         }
 
         private void btnManageConnection_Click(object sender, EventArgs e)
         {
-            new ConnectionForm(profile).ShowDialog();
-            SetProperties();
+            Close();
         }
 
         private void btnReset_Click(object sender, EventArgs e)

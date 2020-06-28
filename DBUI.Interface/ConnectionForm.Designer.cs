@@ -37,6 +37,9 @@
             this.lblUsername = new System.Windows.Forms.Label();
             this.lblPassword = new System.Windows.Forms.Label();
             this.gbxDatabase = new System.Windows.Forms.GroupBox();
+            this.prbTable = new System.Windows.Forms.ProgressBar();
+            this.prbSchema = new System.Windows.Forms.ProgressBar();
+            this.prbDatabase = new System.Windows.Forms.ProgressBar();
             this.cbxTable = new System.Windows.Forms.ComboBox();
             this.cbxSchema = new System.Windows.Forms.ComboBox();
             this.cbxDatabase = new System.Windows.Forms.ComboBox();
@@ -45,6 +48,7 @@
             this.lblDatabase = new System.Windows.Forms.Label();
             this.gbxAuthentication = new System.Windows.Forms.GroupBox();
             this.btnConnect = new DBUI.CustomControls.DbuiButton();
+            this.lblVersion = new System.Windows.Forms.Label();
             this.gbxServer.SuspendLayout();
             this.gbxDatabase.SuspendLayout();
             this.gbxAuthentication.SuspendLayout();
@@ -54,7 +58,7 @@
             // 
             this.gbxServer.Controls.Add(this.lblServer);
             this.gbxServer.Controls.Add(this.txtServer);
-            this.gbxServer.Location = new System.Drawing.Point(13, 13);
+            this.gbxServer.Location = new System.Drawing.Point(15, 13);
             this.gbxServer.Name = "gbxServer";
             this.gbxServer.Size = new System.Drawing.Size(362, 82);
             this.gbxServer.TabIndex = 0;
@@ -127,44 +131,77 @@
             // 
             // gbxDatabase
             // 
+            this.gbxDatabase.Controls.Add(this.prbTable);
+            this.gbxDatabase.Controls.Add(this.prbSchema);
+            this.gbxDatabase.Controls.Add(this.prbDatabase);
             this.gbxDatabase.Controls.Add(this.cbxTable);
             this.gbxDatabase.Controls.Add(this.cbxSchema);
             this.gbxDatabase.Controls.Add(this.cbxDatabase);
             this.gbxDatabase.Controls.Add(this.lblTable);
             this.gbxDatabase.Controls.Add(this.lblSchema);
             this.gbxDatabase.Controls.Add(this.lblDatabase);
-            this.gbxDatabase.Location = new System.Drawing.Point(12, 279);
+            this.gbxDatabase.Location = new System.Drawing.Point(15, 279);
             this.gbxDatabase.Name = "gbxDatabase";
             this.gbxDatabase.Size = new System.Drawing.Size(363, 196);
             this.gbxDatabase.TabIndex = 2;
             this.gbxDatabase.TabStop = false;
             this.gbxDatabase.Text = "Database";
             // 
+            // prbTable
+            // 
+            this.prbTable.Location = new System.Drawing.Point(310, 147);
+            this.prbTable.Name = "prbTable";
+            this.prbTable.Size = new System.Drawing.Size(47, 28);
+            this.prbTable.Step = 1;
+            this.prbTable.TabIndex = 8;
+            // 
+            // prbSchema
+            // 
+            this.prbSchema.Location = new System.Drawing.Point(310, 90);
+            this.prbSchema.Name = "prbSchema";
+            this.prbSchema.Size = new System.Drawing.Size(47, 28);
+            this.prbSchema.Step = 1;
+            this.prbSchema.TabIndex = 7;
+            // 
+            // prbDatabase
+            // 
+            this.prbDatabase.Location = new System.Drawing.Point(310, 35);
+            this.prbDatabase.Name = "prbDatabase";
+            this.prbDatabase.Size = new System.Drawing.Size(47, 28);
+            this.prbDatabase.Step = 1;
+            this.prbDatabase.TabIndex = 6;
+            // 
             // cbxTable
             // 
+            this.cbxTable.DisplayMember = "InternalName";
             this.cbxTable.FormattingEnabled = true;
             this.cbxTable.Location = new System.Drawing.Point(104, 147);
             this.cbxTable.Name = "cbxTable";
             this.cbxTable.Size = new System.Drawing.Size(200, 28);
             this.cbxTable.TabIndex = 5;
+            this.cbxTable.ValueMember = "InternalName";
             this.cbxTable.DropDown += new System.EventHandler(this.cbxTable_DropDown);
             // 
             // cbxSchema
             // 
+            this.cbxSchema.DisplayMember = "InternalName";
             this.cbxSchema.FormattingEnabled = true;
             this.cbxSchema.Location = new System.Drawing.Point(104, 90);
             this.cbxSchema.Name = "cbxSchema";
             this.cbxSchema.Size = new System.Drawing.Size(200, 28);
             this.cbxSchema.TabIndex = 3;
+            this.cbxSchema.ValueMember = "InternalName";
             this.cbxSchema.DropDown += new System.EventHandler(this.cbxSchema_DropDown);
             // 
             // cbxDatabase
             // 
+            this.cbxDatabase.DisplayMember = "InternalName";
             this.cbxDatabase.FormattingEnabled = true;
             this.cbxDatabase.Location = new System.Drawing.Point(104, 35);
             this.cbxDatabase.Name = "cbxDatabase";
             this.cbxDatabase.Size = new System.Drawing.Size(200, 28);
             this.cbxDatabase.TabIndex = 1;
+            this.cbxDatabase.ValueMember = "InternalName";
             this.cbxDatabase.DropDown += new System.EventHandler(this.cbxDatabase_DropDown);
             // 
             // lblTable
@@ -201,7 +238,7 @@
             this.gbxAuthentication.Controls.Add(this.lblPassword);
             this.gbxAuthentication.Controls.Add(this.lblUsername);
             this.gbxAuthentication.Controls.Add(this.txtUsername);
-            this.gbxAuthentication.Location = new System.Drawing.Point(12, 101);
+            this.gbxAuthentication.Location = new System.Drawing.Point(15, 101);
             this.gbxAuthentication.Name = "gbxAuthentication";
             this.gbxAuthentication.Size = new System.Drawing.Size(363, 173);
             this.gbxAuthentication.TabIndex = 1;
@@ -210,7 +247,7 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(128, 495);
+            this.btnConnect.Location = new System.Drawing.Point(145, 495);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(103, 31);
             this.btnConnect.TabIndex = 3;
@@ -218,11 +255,22 @@
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
+            // lblVersion
+            // 
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.lblVersion.Location = new System.Drawing.Point(2, 534);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(133, 13);
+            this.lblVersion.TabIndex = 7;
+            this.lblVersion.Text = "Noah Kulas - Version 1.2.0";
+            // 
             // ConnectionForm
             // 
             this.AcceptButton = this.btnConnect;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(392, 550);
+            this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.gbxAuthentication);
             this.Controls.Add(this.gbxDatabase);
@@ -230,7 +278,7 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.Name = "ConnectionForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Connect";
+            this.Text = "Connect to database";
             this.gbxServer.ResumeLayout(false);
             this.gbxServer.PerformLayout();
             this.gbxDatabase.ResumeLayout(false);
@@ -238,6 +286,7 @@
             this.gbxAuthentication.ResumeLayout(false);
             this.gbxAuthentication.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -260,5 +309,9 @@
         private System.Windows.Forms.ComboBox cbxTable;
         private System.Windows.Forms.ComboBox cbxSchema;
         private System.Windows.Forms.ComboBox cbxDatabase;
+        private System.Windows.Forms.ProgressBar prbDatabase;
+        private System.Windows.Forms.ProgressBar prbTable;
+        private System.Windows.Forms.ProgressBar prbSchema;
+        private System.Windows.Forms.Label lblVersion;
     }
 }

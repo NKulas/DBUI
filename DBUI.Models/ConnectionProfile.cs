@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Security;
 using System.Text;
@@ -15,7 +16,7 @@ namespace DBUI.Models
         private StructureObject schema;
         private StructureObject table;
 
-        public StructureObject Server 
+        public StructureObject Server
         {
             get
             {
@@ -98,6 +99,46 @@ namespace DBUI.Models
             }
 
             return connectionBuilder.ConnectionString;
+        }
+
+        public bool ValidateComplete()
+        {
+            bool isComplete = true;
+
+            if (Server == null || Server.InternalName == string.Empty)
+            {
+                isComplete = false;
+            }
+
+            if (Database == null || Database.InternalName == string.Empty)
+            {
+                isComplete = false;
+            }
+
+            if (Schema == null || Schema.InternalName == string.Empty)
+            {
+                isComplete = false;
+            }
+
+            if (Table == null || Table.InternalName == string.Empty)
+            {
+                isComplete = false;
+            }
+
+            if (AuthenticationType == AuthenticationType.Server)
+            {
+                if (string.IsNullOrWhiteSpace(Username))
+                {
+                    isComplete = false;
+                }
+
+                if (string.IsNullOrWhiteSpace(Password))
+                {
+                    isComplete = false;
+                }
+            }
+
+            return isComplete;
         }
     }
 }

@@ -54,6 +54,16 @@ namespace DBUI.Data
             }
         }
 
+        public async static Task<DataTable> QueryAsync(string sql, SqlParameter[] parameters = null)
+        {
+            Task<DataTable> t = Task.Run(() =>
+            {
+                return Query(sql, parameters);
+            });
+
+            return await t;
+        }
+
         public static DataTable Query(string sql, SqlParameter[] parameters = null)
         {
             try
@@ -70,14 +80,24 @@ namespace DBUI.Data
 
                 return data;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             finally
             {
                 closeConnection();
             }
+        }
+
+        public async static Task<int> NonQueryAsync(string sql, SqlParameter[] parameters = null)
+        {
+            Task<int> t = Task.Run(() =>
+            {
+                return NonQuery(sql, parameters);
+            });
+
+            return await t;
         }
 
         public static int NonQuery(string sql, SqlParameter[] parameters = null)

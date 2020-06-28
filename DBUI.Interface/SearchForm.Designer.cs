@@ -35,8 +35,6 @@
             this.btnManageConnection = new DBUI.CustomControls.DbuiButton();
             this.lblTable = new System.Windows.Forms.Label();
             this.lblConnectedTo = new System.Windows.Forms.Label();
-            this.lblCreatedBy = new System.Windows.Forms.Label();
-            this.lblVersion = new System.Windows.Forms.Label();
             this.gbxConnection.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -109,31 +107,11 @@
             this.lblConnectedTo.TabIndex = 0;
             this.lblConnectedTo.Text = "Connected to:";
             // 
-            // lblCreatedBy
-            // 
-            this.lblCreatedBy.AutoSize = true;
-            this.lblCreatedBy.Location = new System.Drawing.Point(9, 398);
-            this.lblCreatedBy.Name = "lblCreatedBy";
-            this.lblCreatedBy.Size = new System.Drawing.Size(171, 20);
-            this.lblCreatedBy.TabIndex = 4;
-            this.lblCreatedBy.Text = "Created by Noah Kulas";
-            // 
-            // lblVersion
-            // 
-            this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(9, 418);
-            this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(102, 20);
-            this.lblVersion.TabIndex = 5;
-            this.lblVersion.Text = "Version 1.1.0";
-            // 
             // SearchForm
             // 
             this.AcceptButton = this.btnSearch;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(791, 450);
-            this.Controls.Add(this.lblVersion);
-            this.Controls.Add(this.lblCreatedBy);
             this.Controls.Add(this.gbxConnection);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnSearch);
@@ -141,11 +119,10 @@
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.Name = "SearchForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Search";
+            this.Text = "Search data";
             this.gbxConnection.ResumeLayout(false);
             this.gbxConnection.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -158,7 +135,5 @@
         private CustomControls.DbuiButton btnManageConnection;
         private System.Windows.Forms.Label lblTable;
         private System.Windows.Forms.Label lblConnectedTo;
-        private System.Windows.Forms.Label lblCreatedBy;
-        private System.Windows.Forms.Label lblVersion;
     }
 }
