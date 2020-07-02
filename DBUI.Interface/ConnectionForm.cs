@@ -135,6 +135,9 @@ namespace DBUI.Interface
         {
             if (txtServer.Text != string.Empty)
             {
+                cbxDatabase.SelectedIndex = -1;
+                cbxSchema.SelectedIndex = -1;
+                cbxTable.SelectedIndex = -1;
                 UpdateProfile();
 
                 StructureObject server = new StructureObject(StructureObjectType.Server)
@@ -160,6 +163,8 @@ namespace DBUI.Interface
 
         private async void cbxSchema_DropDown(object sender, EventArgs e)
         {
+            cbxSchema.SelectedIndex = -1;
+            cbxTable.SelectedIndex = -1;
             UpdateProfile();
 
             if (cbxDatabase.Text != string.Empty)
@@ -187,6 +192,7 @@ namespace DBUI.Interface
 
         private async void cbxTable_DropDown(object sender, EventArgs e)
         {
+            cbxTable.SelectedIndex = -1;
             UpdateProfile();
 
             if (cbxSchema.Text != string.Empty)

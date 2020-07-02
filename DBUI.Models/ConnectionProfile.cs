@@ -80,12 +80,14 @@ namespace DBUI.Models
             }
         }
 
-        public string GetConnectionString()
+        public string GetConnectionString(StructureObjectType endpoint = StructureObjectType.Database)
         {
             SqlConnectionStringBuilder connectionBuilder = new SqlConnectionStringBuilder();
 
-            if (Server != null) connectionBuilder.DataSource = Server.InternalName;
-            if (Database != null) connectionBuilder.InitialCatalog = Database.InternalName;
+            if (Server != null)
+            {
+                connectionBuilder.DataSource = Server.InternalName;
+            }
 
             if (AuthenticationType == AuthenticationType.Windows)
             {
@@ -96,6 +98,11 @@ namespace DBUI.Models
                 connectionBuilder.IntegratedSecurity = false;
                 connectionBuilder.UserID = Username;
                 connectionBuilder.Password = Password;
+            }
+
+            if (Database != null)
+            {
+                connectionBuilder.InitialCatalog = Database.InternalName;
             }
 
             return connectionBuilder.ConnectionString;
