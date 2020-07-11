@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -71,6 +72,8 @@ namespace DBUI.Interface
             {
                 txtUsername.Enabled = false;
                 txtPassword.Enabled = false;
+                txtUsername.Text = string.Empty;
+                txtPassword.Text = string.Empty;
             }
             else
             {
@@ -81,7 +84,7 @@ namespace DBUI.Interface
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            UpdateProfile();
+            //UpdateAuthentication();
 
             if (profile.ValidateComplete())
             {
@@ -93,17 +96,65 @@ namespace DBUI.Interface
             }
         }
 
-        private void UpdateProfile()
+        private void txtServer_TextChanged(object sender, EventArgs e)
         {
-            profile.Server = new StructureObject(StructureObjectType.Server)
-            {
-                InternalName = txtServer.Text,
-                FriendlyName = txtServer.Text
-            };
+            ClearLowers((sender as TextBox).Tag);
+        }
 
+        private async void cbx_DropDown(object sender, EventArgs e)
+        {
+            ComboBox cbxSender = sender as ComboBox;
+            ClearLowers(cbxSender.Tag);
+            //UpdateAuthentication();
+
+            StructureObjectType priorType = (StructureObjectType)Enum.Parse(typeof(StructureObjectType), cbxSender.Tag.ToString()) - 1;
+
+            try
+            {
+                prbProgress.Style = ProgressBarStyle.Marquee;
+                cbxSender.DataSource = await StructureManager.QueryChildren((StructureObject)profile.GetType().GetProperty(priorType.ToString()).GetValue(profile), profile);
+            }
+            catch (Exception ex)
+            {
+                new MessageForm("Error", ex.Message);
+            }
+            finally
+            {
+                prbProgress.Style = ProgressBarStyle.Blocks;
+            }
+        }
+
+        private void edit_Complete(object sender, EventArgs e)
+        {
+            Control ctlSender = sender as Control;
+
+            StructureObjectType objectType = (StructureObjectType)Enum.Parse(typeof(StructureObjectType), ctlSender.Tag.ToString());
+
+            StructureObject structureObject;
+
+            if (string.IsNullOrWhiteSpace(ctlSender.Text))
+            {
+                structureObject = null;
+            }
+            else
+            {
+                structureObject = new StructureObject(objectType)
+                {
+                    InternalName = ctlSender.Text,
+                    FriendlyName = ctlSender.Text
+                };
+            }
+
+            profile.GetType().GetProperty(ctlSender.Tag.ToString()).SetValue(profile, structureObject);
+        }
+
+        private void gbxAuthentication_Leave(object sender, EventArgs e)
+        {
             if (chkWindowsAuthentication.Checked)
             {
                 profile.AuthenticationType = AuthenticationType.Windows;
+                profile.Username = string.Empty;
+                profile.Password = string.Empty;
             }
             else
             {
@@ -111,111 +162,24 @@ namespace DBUI.Interface
                 profile.Username = txtUsername.Text;
                 profile.Password = txtPassword.Text;
             }
-
-            profile.Database = new StructureObject(StructureObjectType.Database)
-            {
-                InternalName = cbxDatabase.Text,
-                FriendlyName = cbxDatabase.Text
-            };
-
-            profile.Schema = new StructureObject(StructureObjectType.Schema)
-            {
-                InternalName = cbxSchema.Text,
-                FriendlyName = cbxSchema.Text
-            };
-
-            profile.Table = new StructureObject(StructureObjectType.Table)
-            {
-                InternalName = cbxTable.Text,
-                FriendlyName = cbxTable.Text
-            };
         }
 
-        private async void cbxDatabase_DropDown(object sender, EventArgs e)
+        private void ClearLowers(object tag)
         {
-            if (txtServer.Text != string.Empty)
+            int value = EnumStringToInt(tag.ToString());
+
+            List<ComboBox> clearableControls = gbxDatabase.Controls.OfType<ComboBox>().Where(x => EnumStringToInt(x.Tag.ToString()) > value).ToList();
+
+            foreach (ComboBox c in clearableControls)
             {
-                cbxDatabase.SelectedIndex = -1;
-                cbxSchema.SelectedIndex = -1;
-                cbxTable.SelectedIndex = -1;
-                UpdateProfile();
-
-                StructureObject server = new StructureObject(StructureObjectType.Server)
-                {
-                    InternalName = txtServer.Text
-                };
-
-                try
-                {
-                    prbDatabase.Style = ProgressBarStyle.Marquee;
-                    cbxDatabase.DataSource = await StructureManager.QueryChildren(server, profile);
-                }
-                catch (Exception ex)
-                {
-                    new MessageForm("Error", ex.Message);
-                }
-                finally
-                {
-                    prbDatabase.Style = ProgressBarStyle.Blocks;
-                }
+                c.SelectedIndex = -1;
+                c.DataSource = new List<StructureObject>();
             }
         }
 
-        private async void cbxSchema_DropDown(object sender, EventArgs e)
+        private int EnumStringToInt(string enumValue)
         {
-            cbxSchema.SelectedIndex = -1;
-            cbxTable.SelectedIndex = -1;
-            UpdateProfile();
-
-            if (cbxDatabase.Text != string.Empty)
-            {
-                StructureObject database = new StructureObject(StructureObjectType.Database)
-                {
-                    InternalName = cbxDatabase.Text
-                };
-
-                try
-                {
-                    prbSchema.Style = ProgressBarStyle.Marquee;
-                    cbxSchema.DataSource = await StructureManager.QueryChildren(database, profile);
-                }
-                catch (Exception ex)
-                {
-                    new MessageForm("Error", ex.Message);
-                }
-                finally
-                {
-                    prbSchema.Style = ProgressBarStyle.Blocks;
-                }
-            }
-        }
-
-        private async void cbxTable_DropDown(object sender, EventArgs e)
-        {
-            cbxTable.SelectedIndex = -1;
-            UpdateProfile();
-
-            if (cbxSchema.Text != string.Empty)
-            {
-                StructureObject schema = new StructureObject(StructureObjectType.Schema)
-                {
-                    InternalName = cbxSchema.Text
-                };
-
-                try
-                {
-                    prbTable.Style = ProgressBarStyle.Marquee;
-                    cbxTable.DataSource = await StructureManager.QueryChildren(schema, profile);
-                }
-                catch (Exception ex)
-                {
-                    new MessageForm("Error", ex.Message);
-                }
-                finally
-                {
-                    prbTable.Style = ProgressBarStyle.Blocks;
-                }
-            }
+            return (int)Enum.Parse(typeof(StructureObjectType), enumValue);
         }
     }
 }

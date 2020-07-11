@@ -70,6 +70,8 @@ namespace DBUI.Models
 
         private StructureObject ValidateType(StructureObjectType requestedType, StructureObject structureObject)
         {
+            if (structureObject == null) return null;
+
             if (structureObject.ObjectType == requestedType)
             {
                 return structureObject;

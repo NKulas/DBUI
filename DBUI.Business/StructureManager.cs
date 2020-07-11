@@ -26,7 +26,7 @@ namespace DBUI.Business
             switch (parent.ObjectType)
             {
                 case StructureObjectType.Server:
-                    query = $"SELECT * FROM master.dbo.sysdatabases;";
+                    query = "SELECT * FROM sys.databases;";
                     childType = StructureObjectType.Database;
                     break;
 
@@ -89,6 +89,7 @@ namespace DBUI.Business
 
                 if (lastLower && thisUpper) { result += $" {c}"; }
                 else if (lastNumber && (thisUpper || thisLower)) result += $" {c}";
+                else if ((lastLower || lastUpper) && thisNumber) result += $" {c}";
                 else result += c;
 
                 lastUpper = thisUpper;
