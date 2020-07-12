@@ -72,6 +72,12 @@
     <Compile Include="ResultForm.Designer.cs">
       <DependentUpon>ResultForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="StructureInspectorForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="StructureInspectorForm.Designer.cs">
+      <DependentUpon>StructureInspectorForm.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ConnectionForm.resx">
       <DependentUpon>ConnectionForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -92,6 +98,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ResultForm.resx">
       <DependentUpon>ResultForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="StructureInspectorForm.resx">
+      <DependentUpon>StructureInspectorForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

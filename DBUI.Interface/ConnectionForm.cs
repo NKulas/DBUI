@@ -181,5 +181,19 @@ namespace DBUI.Interface
         {
             return (int)Enum.Parse(typeof(StructureObjectType), enumValue);
         }
+
+        private void btnViewObject_Click(object sender, EventArgs e)
+        {
+            List<PropertyInfo> properties = profile.GetType().GetProperties().Where(x => x.PropertyType == typeof(StructureObject)).ToList();
+
+            for (int counter = properties.Count - 1; counter >= 0; counter--)
+            {
+                if (properties[counter].GetValue(profile) != null)
+                {
+                    new StructureInspectorForm((StructureObject)properties[counter].GetValue(profile), profile).ShowDialog();
+                    break;
+                }
+            }
+        }
     }
 }

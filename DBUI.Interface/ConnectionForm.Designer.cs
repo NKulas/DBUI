@@ -37,16 +37,17 @@
             this.lblUsername = new System.Windows.Forms.Label();
             this.lblPassword = new System.Windows.Forms.Label();
             this.gbxDatabase = new System.Windows.Forms.GroupBox();
-            this.prbProgress = new System.Windows.Forms.ProgressBar();
             this.cbxTable = new System.Windows.Forms.ComboBox();
             this.cbxSchema = new System.Windows.Forms.ComboBox();
             this.cbxDatabase = new System.Windows.Forms.ComboBox();
             this.lblTable = new System.Windows.Forms.Label();
             this.lblSchema = new System.Windows.Forms.Label();
             this.lblDatabase = new System.Windows.Forms.Label();
+            this.prbProgress = new System.Windows.Forms.ProgressBar();
             this.gbxAuthentication = new System.Windows.Forms.GroupBox();
             this.btnConnect = new DBUI.CustomControls.DbuiButton();
             this.lblVersion = new System.Windows.Forms.Label();
+            this.btnViewObject = new DBUI.CustomControls.DbuiButton();
             this.gbxServer.SuspendLayout();
             this.gbxDatabase.SuspendLayout();
             this.gbxAuthentication.SuspendLayout();
@@ -140,18 +141,10 @@
             this.gbxDatabase.Controls.Add(this.lblDatabase);
             this.gbxDatabase.Location = new System.Drawing.Point(15, 304);
             this.gbxDatabase.Name = "gbxDatabase";
-            this.gbxDatabase.Size = new System.Drawing.Size(363, 196);
+            this.gbxDatabase.Size = new System.Drawing.Size(362, 196);
             this.gbxDatabase.TabIndex = 2;
             this.gbxDatabase.TabStop = false;
             this.gbxDatabase.Text = "Database";
-            // 
-            // prbProgress
-            // 
-            this.prbProgress.Location = new System.Drawing.Point(15, 288);
-            this.prbProgress.Name = "prbProgress";
-            this.prbProgress.Size = new System.Drawing.Size(365, 10);
-            this.prbProgress.Step = 1;
-            this.prbProgress.TabIndex = 6;
             // 
             // cbxTable
             // 
@@ -165,7 +158,7 @@
             this.cbxTable.Tag = "Table";
             this.cbxTable.ValueMember = "InternalName";
             this.cbxTable.DropDown += new System.EventHandler(this.cbx_DropDown);
-            this.cbxTable.SelectedIndexChanged += new System.EventHandler(this.edit_Complete);
+            this.cbxTable.SelectedValueChanged += new System.EventHandler(this.edit_Complete);
             // 
             // cbxSchema
             // 
@@ -179,7 +172,7 @@
             this.cbxSchema.Tag = "Schema";
             this.cbxSchema.ValueMember = "InternalName";
             this.cbxSchema.DropDown += new System.EventHandler(this.cbx_DropDown);
-            this.cbxSchema.SelectedIndexChanged += new System.EventHandler(this.edit_Complete);
+            this.cbxSchema.SelectedValueChanged += new System.EventHandler(this.edit_Complete);
             // 
             // cbxDatabase
             // 
@@ -193,7 +186,7 @@
             this.cbxDatabase.Tag = "Database";
             this.cbxDatabase.ValueMember = "InternalName";
             this.cbxDatabase.DropDown += new System.EventHandler(this.cbx_DropDown);
-            this.cbxDatabase.SelectedIndexChanged += new System.EventHandler(this.edit_Complete);
+            this.cbxDatabase.SelectedValueChanged += new System.EventHandler(this.edit_Complete);
             // 
             // lblTable
             // 
@@ -222,6 +215,14 @@
             this.lblDatabase.TabIndex = 0;
             this.lblDatabase.Text = "Database:";
             // 
+            // prbProgress
+            // 
+            this.prbProgress.Location = new System.Drawing.Point(15, 288);
+            this.prbProgress.Name = "prbProgress";
+            this.prbProgress.Size = new System.Drawing.Size(362, 10);
+            this.prbProgress.Step = 1;
+            this.prbProgress.TabIndex = 6;
+            // 
             // gbxAuthentication
             // 
             this.gbxAuthentication.Controls.Add(this.txtPassword);
@@ -239,7 +240,7 @@
             // 
             // btnConnect
             // 
-            this.btnConnect.Location = new System.Drawing.Point(145, 506);
+            this.btnConnect.Location = new System.Drawing.Point(68, 506);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(103, 31);
             this.btnConnect.TabIndex = 3;
@@ -257,11 +258,22 @@
             this.lblVersion.TabIndex = 7;
             this.lblVersion.Text = "Noah Kulas - Version 1.2.1";
             // 
+            // btnViewObject
+            // 
+            this.btnViewObject.Location = new System.Drawing.Point(203, 506);
+            this.btnViewObject.Name = "btnViewObject";
+            this.btnViewObject.Size = new System.Drawing.Size(103, 31);
+            this.btnViewObject.TabIndex = 8;
+            this.btnViewObject.Text = "View object";
+            this.btnViewObject.UseVisualStyleBackColor = true;
+            this.btnViewObject.Click += new System.EventHandler(this.btnViewObject_Click);
+            // 
             // ConnectionForm
             // 
             this.AcceptButton = this.btnConnect;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(392, 565);
+            this.Controls.Add(this.btnViewObject);
             this.Controls.Add(this.prbProgress);
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.btnConnect);
@@ -304,5 +316,6 @@
         private System.Windows.Forms.ComboBox cbxDatabase;
         private System.Windows.Forms.ProgressBar prbProgress;
         private System.Windows.Forms.Label lblVersion;
+        private CustomControls.DbuiButton btnViewObject;
     }
 }

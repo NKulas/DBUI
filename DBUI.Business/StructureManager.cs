@@ -74,6 +74,61 @@ namespace DBUI.Business
             return children;
         }
 
+        public static async Task<bool> UpdateName(StructureObject existingObject, string newName, ConnectionProfile profile)
+        {
+            DataAccess.ConnectionString = profile.GetConnectionString();
+            string query;
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            switch (existingObject.ObjectType)
+            {
+                case StructureObjectType.Server:
+                    return false;
+
+                case StructureObjectType.Database:
+                    return false;
+
+                case StructureObjectType.Schema:
+                    return false;
+
+                case StructureObjectType.Table:
+                    //query = $"ALTER TABLE @item RENAME TO @newName;";
+                    query = $"sp_rename '{existingObject.InternalName}', '{newName}';";
+                    /*parameters.Add(
+                        new SqlParameter("item", existingObject.InternalName)
+                    );
+                    parameters.Add(
+                        new SqlParameter("newName", newName)
+                    );*/
+                    break;
+
+                case StructureObjectType.Column:
+                    return false;
+
+                default:
+                    return false;
+            }
+
+            try
+            {
+                int result = await DataAccess.NonQueryAsync(query, parameters.ToArray());
+
+                if (result == -1)
+                {
+                    existingObject.InternalName = newName;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private static string GuessFriendlyName(string internalName)
         {
             string result = "";
